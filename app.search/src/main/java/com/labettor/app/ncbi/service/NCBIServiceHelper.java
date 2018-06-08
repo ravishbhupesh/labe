@@ -54,7 +54,14 @@ public class NCBIServiceHelper {
 
 	public List<Integer> esearch(NCBISearchDTO searchDTO) {
 		System.out.println("Request Received : " + searchDTO);
-		String searchUrl = urlBuilder.searchURL("term=stem+cells+AND+free+fulltext%5bfilter%5d");
+		StringBuilder searchInfo = new StringBuilder("term=");
+		searchInfo.append(searchDTO.getHost());
+		searchInfo.append("+");
+		searchInfo.append(searchDTO.getExperiment());
+		searchInfo.append("+");
+		searchInfo.append(searchDTO.getCellType());
+		// String searchUrl = urlBuilder.searchURL("term=human+cell+migration+SH-SY5Y");
+		String searchUrl = urlBuilder.searchURL(searchInfo.toString());
 		System.out.println("URL : " + searchUrl);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(searchUrl, String.class);

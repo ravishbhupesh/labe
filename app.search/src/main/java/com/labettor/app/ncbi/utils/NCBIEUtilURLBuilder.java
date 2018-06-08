@@ -34,12 +34,15 @@ public final class NCBIEUtilURLBuilder {
 	/**
 	 * https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term=stem+cells+AND+free+fulltext
 	 * https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term=stem+cells+AND+free+fulltext%5bfilter%5d
+	 * 
+	 * https://www.ncbi.nlm.nih.gov/pubmed/?term=human+cell+migration+SH-SY5Y
+	 * https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term=human+cell+migration+SH-SY5Y
 	 */
 	public String searchURL(String termInfo) {
 		StringBuilder sb = new StringBuilder(NCBIEUtilitiesConstants.BASE_URL);
 		sb.append(NCBIEUtilitiesConstants.URL_EXT_ESEARCH);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_START);
-		sb.append(NCBIEUtilitiesConstants.DB_PMC);
+		sb.append(NCBIEUtilitiesConstants.DB_PUBMED);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
 		sb.append(termInfo);
 		return sb.toString();
@@ -47,9 +50,9 @@ public final class NCBIEUtilURLBuilder {
 
 	public String fetchURL(String idInfo) {
 		StringBuilder sb = new StringBuilder(NCBIEUtilitiesConstants.BASE_URL);
-		sb.append(NCBIEUtilitiesConstants.URL_EXT_ESEARCH);
+		sb.append(NCBIEUtilitiesConstants.URL_EXT_EFETCH);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_START);
-		sb.append(NCBIEUtilitiesConstants.DB_PMC);
+		sb.append(NCBIEUtilitiesConstants.DB_PUBMED);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
 		sb.append("id=" + idInfo);
 		return sb.toString();
@@ -57,6 +60,7 @@ public final class NCBIEUtilURLBuilder {
 
 	public static void main(String[] args) {
 		NCBIEUtilURLBuilder builder = NCBIEUtilURLBuilder.getInstance();
-		System.out.println(builder.infoURL());
+		System.out.println(builder.searchURL("term=human+cell+migration+SH-SY5Y"));
 	}
+
 }
