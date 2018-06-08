@@ -48,19 +48,21 @@ public final class NCBIEUtilURLBuilder {
 		return sb.toString();
 	}
 
-	public String fetchURL(String idInfo) {
+	public static String fetchURL(String idInfo) {
 		StringBuilder sb = new StringBuilder(NCBIEUtilitiesConstants.BASE_URL);
 		sb.append(NCBIEUtilitiesConstants.URL_EXT_EFETCH);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_START);
 		sb.append(NCBIEUtilitiesConstants.DB_PUBMED);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
 		sb.append("id=" + idInfo);
+		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
+		sb.append(NCBIEUtilitiesConstants.URL_PARAM_RTRN_MODE);
 		return sb.toString();
 	}
 
 	public static void main(String[] args) {
-		NCBIEUtilURLBuilder builder = NCBIEUtilURLBuilder.getInstance();
-		System.out.println(builder.searchURL("term=human+cell+migration+SH-SY5Y"));
+		// System.out.println(searchURL("term=human+cell+migration+SH-SY5Y"));
+		System.out.println(fetchURL("term=human+cell+migration+SH-SY5Y"));
 	}
 
 }
