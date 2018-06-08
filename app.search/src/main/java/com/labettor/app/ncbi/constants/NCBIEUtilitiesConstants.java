@@ -93,4 +93,6 @@ public interface NCBIEUtilitiesConstants {
 	String URL_PARAM_SEP = "&";
 	
 	String DB_PUBMED = "db=pubmed";
+	
+	String DB_PMC = "db=pmc";
 }
