@@ -19,25 +19,25 @@ import com.labettor.app.search.constants.SearchConstants;
 @RestController
 @RequestMapping("/labettor")
 public class PublicationSearchController {
-	
+
 	private NCBIService ncbiService;
-	
+
 	@Autowired
 	public PublicationSearchController(NCBIService ncbiService) {
 		this.ncbiService = ncbiService;
 	}
 
 	@RequestMapping("/search")
-	public String search(
-			@RequestParam(value = "host") String host,
-			@RequestParam(value = "experiment") String experiment, 
-			@RequestParam(value = "celltype") String cellType) {
-		System.out.println("Got a search request with HOST : " + host + ": EXPERIMENT : " + experiment + " : CELL TYPE : " + cellType);
-		if(ncbiService == null) {
+	public String search(@RequestParam(value = "db") String db,
+			@RequestParam(value = "hostCellOrCellType") String hostCellOrCellType,
+			@RequestParam(value = "experiment") String experiment) {
+		System.out.println("Got a search request with HostCellOrCellType : " + hostCellOrCellType + ": EXPERIMENT : "
+				+ experiment);
+		if (ncbiService == null) {
 			System.out.println("NCBIService is NULL!");
 			return SearchConstants.SEARCH_FAILURE;
 		}
-		NCBISearchResultDTO searchResultDTO = ncbiService.search(new NCBISearchDTO(host, experiment, cellType));
+		NCBISearchResultDTO searchResultDTO = ncbiService.search(new NCBISearchDTO(db, hostCellOrCellType, experiment));
 		System.out.println(searchResultDTO);
 		return SearchConstants.SEARCH_SUCCESS;
 	}

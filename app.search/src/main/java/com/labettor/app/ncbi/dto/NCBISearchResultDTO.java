@@ -1,15 +1,16 @@
 package com.labettor.app.ncbi.dto;
 
 public class NCBISearchResultDTO {
-	
-	private NCBISearchResultDTO(){}
+
+	private NCBISearchResultDTO() {
+	}
 
 	/**
 	 * Inputs
 	 */
-	private String host;
-	private String experiment; 
-	private String cellType;
+	private String db;
+	private String hostCellOrCellType;
+	private String experiment;
 	/**
 	 * Results
 	 */
@@ -20,13 +21,21 @@ public class NCBISearchResultDTO {
 	private String publicationLink;
 	private String protocol;
 	private String additionalInformation;
-	
-	public String getHost() {
-		return host;
+
+	public String getDb() {
+		return db;
 	}
 
-	public void setHost(String host) {
-		this.host = host;
+	public void setDb(String db) {
+		this.db = db;
+	}
+
+	public String getHostCellOrCellType() {
+		return hostCellOrCellType;
+	}
+
+	public void setHostCellOrCellType(String hostCellOrCellType) {
+		this.hostCellOrCellType = hostCellOrCellType;
 	}
 
 	public String getExperiment() {
@@ -35,14 +44,6 @@ public class NCBISearchResultDTO {
 
 	public void setExperiment(String experiment) {
 		this.experiment = experiment;
-	}
-
-	public String getCellType() {
-		return cellType;
-	}
-
-	public void setCellType(String cellType) {
-		this.cellType = cellType;
 	}
 
 	public String getBrandName() {
@@ -100,14 +101,14 @@ public class NCBISearchResultDTO {
 	public void setAdditionalInformation(String additionalInformation) {
 		this.additionalInformation = additionalInformation;
 	}
-	
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Host : " + this.getHost());
+		sb.append("Db : " + this.getDb());
+		sb.append("\n");
+		sb.append("Host : " + this.getHostCellOrCellType());
 		sb.append("\n");
 		sb.append("Experiment : " + this.getExperiment());
-		sb.append("\n");
-		sb.append("Cell Type : " + this.getCellType());
 		sb.append("\n");
 		sb.append("Brand Name : " + this.getBrandName());
 		sb.append("\n");
@@ -125,11 +126,11 @@ public class NCBISearchResultDTO {
 		return sb.toString();
 	}
 
-	public static class NCBISearchResultDTOBuilder{
-		
-		private String host;
-		private String experiment; 
-		private String cellType;
+	public static class NCBISearchResultDTOBuilder {
+
+		private String db;
+		private String hostCellOrCellType;
+		private String experiment;
 		private String brandName;
 		private String catalogueNumber;
 		private String author;
@@ -138,52 +139,52 @@ public class NCBISearchResultDTO {
 		private String protocol;
 		private String additionalInformation;
 
-		public NCBISearchResultDTOBuilder(String host, String experiment, String cellType) {
-			this.host = host;
+		public NCBISearchResultDTOBuilder(String db, String hostCellOrCellType, String experiment) {
+			this.db = db;
+			this.hostCellOrCellType = hostCellOrCellType;
 			this.experiment = experiment;
-			this.cellType = cellType;
 		}
-		
+
 		public NCBISearchResultDTOBuilder setBrandName(String brandName) {
 			this.brandName = brandName;
 			return this;
 		}
-		
+
 		public NCBISearchResultDTOBuilder setCatalogueNumber(String catalogueNumber) {
 			this.catalogueNumber = catalogueNumber;
 			return this;
 		}
-		
+
 		public NCBISearchResultDTOBuilder setAuthor(String author) {
 			this.author = author;
 			return this;
 		}
-		
+
 		public NCBISearchResultDTOBuilder setProductLink(String productLink) {
 			this.productLink = productLink;
 			return this;
 		}
-		
+
 		public NCBISearchResultDTOBuilder setPublicationLink(String publicationLink) {
 			this.publicationLink = publicationLink;
 			return this;
 		}
-		
+
 		public NCBISearchResultDTOBuilder setProtocol(String protocol) {
 			this.protocol = protocol;
 			return this;
 		}
-		
+
 		public NCBISearchResultDTOBuilder setAdditionalInformation(String additionalInformation) {
 			this.additionalInformation = additionalInformation;
 			return this;
 		}
-		
+
 		public NCBISearchResultDTO build() {
 			NCBISearchResultDTO dto = new NCBISearchResultDTO();
-			dto.setHost(this.host);
+			dto.setDb(this.db);
+			dto.setHostCellOrCellType(this.hostCellOrCellType);
 			dto.setExperiment(this.experiment);
-			dto.setCellType(this.cellType);
 			dto.setBrandName(this.brandName);
 			dto.setCatalogueNumber(this.catalogueNumber);
 			dto.setAuthor(this.author);
@@ -194,5 +195,5 @@ public class NCBISearchResultDTO {
 			return dto;
 		}
 	}
-	
+
 }

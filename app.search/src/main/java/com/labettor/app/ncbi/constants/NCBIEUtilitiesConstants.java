@@ -95,7 +95,5 @@ public interface NCBIEUtilitiesConstants {
 
 	String URL_PARAM_RTRN_MODE = "retmode=xml";
 
-	String DB_PUBMED = "db=pubmed";
-
-	String DB_PMC = "db=pmc";
+	String DB = "db=";
 }

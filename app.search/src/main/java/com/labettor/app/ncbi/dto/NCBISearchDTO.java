@@ -2,33 +2,35 @@ package com.labettor.app.ncbi.dto;
 
 public class NCBISearchDTO {
 
-	private String host;
-	private String experiment; 
-	private String cellType;
-	
-	public NCBISearchDTO(String host, String experiment, String cellType) {
-		this.host = host;
+	private String db;
+	private String hostCellOrCellType;
+	private String experiment;
+
+	public NCBISearchDTO(String db, String hostCellOrCellType, String experiment) {
+		this.db = db;
+		this.hostCellOrCellType = hostCellOrCellType;
 		this.experiment = experiment;
-		this.cellType = cellType;
 	}
-	
-	public String getHost() {
-		return host;
+
+	public String getDb() {
+		return db;
 	}
+
+	public String getHostCellOrCellType() {
+		return hostCellOrCellType;
+	}
+
 	public String getExperiment() {
 		return experiment;
 	}
-	public String getCellType() {
-		return cellType;
-	}
-	
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Host : " + this.getHost());
+		sb.append("Db : " + this.getDb());
+		sb.append("\n");
+		sb.append("HostCellOrCellType : " + this.getHostCellOrCellType());
 		sb.append("\n");
 		sb.append("Experiment : " + this.getExperiment());
-		sb.append("\n");
-		sb.append("Cell Type : " + this.getCellType());
 		return sb.toString();
 	}
 }

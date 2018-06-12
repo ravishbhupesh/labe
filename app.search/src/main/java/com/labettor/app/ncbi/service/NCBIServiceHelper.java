@@ -1,6 +1,7 @@
 package com.labettor.app.ncbi.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,27 +56,20 @@ public class NCBIServiceHelper {
 
 	public NCBISearchResultDTO einfo(NCBISearchDTO searchDTO) {
 		System.out.println("Request Received : " + searchDTO);
-		String infoUrl = urlBuilder.searchURL("term=stem+cells+AND+free+fulltext");
+		String infoUrl = urlBuilder.searchURL(searchDTO);
 		System.out.println("URL : " + infoUrl);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(infoUrl, String.class);
 		System.out.println("StatusCode : " + response.getStatusCode());
 		System.out.println(response.getBody());
-		NCBISearchResultDTO searchResultDTO = new NCBISearchResultDTO.NCBISearchResultDTOBuilder(searchDTO.getHost(),
-				searchDTO.getExperiment(), searchDTO.getCellType()).build();
+		NCBISearchResultDTO searchResultDTO = new NCBISearchResultDTO.NCBISearchResultDTOBuilder(searchDTO.getDb(),
+				searchDTO.getHostCellOrCellType(), searchDTO.getExperiment()).build();
 		return searchResultDTO;
 	}
 
 	public List<Integer> esearch(NCBISearchDTO searchDTO) {
 		System.out.println("Request Received : " + searchDTO);
-		StringBuilder searchInfo = new StringBuilder("term=");
-		searchInfo.append(searchDTO.getHost());
-		searchInfo.append("+");
-		searchInfo.append(searchDTO.getExperiment());
-		searchInfo.append("+");
-		searchInfo.append(searchDTO.getCellType());
-		// String searchUrl = urlBuilder.searchURL("term=human+cell+migration+SH-SY5Y");
-		String searchUrl = urlBuilder.searchURL(searchInfo.toString());
+		String searchUrl = urlBuilder.searchURL(searchDTO);
 		System.out.println("URL : " + searchUrl);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(searchUrl, String.class);
@@ -128,20 +122,24 @@ public class NCBIServiceHelper {
 
 	public NCBISearchResultDTO efetch(List<Integer> uIds, NCBISearchResultDTO searchResultDTO) {
 		System.out.println("Request a list : " + uIds);
-		String fetchUrl = urlBuilder
-				.fetchURL(uIds.stream().map(number -> String.valueOf(number)).collect(Collectors.joining(",")));
+		// String fetchUrl = urlBuilder.fetchURL(searchResultDTO.getDb(),
+		// convertToCommaSeperatedString(uIds));
+
+		String fetchUrl = urlBuilder.fetchURL(searchResultDTO.getDb(),
+				uIds.stream().map(number -> String.valueOf(number)).collect(Collectors.joining(",")));
+
 		System.out.println("URL : " + fetchUrl);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(fetchUrl, String.class);
 		System.out.println("StatusCode : " + response.getStatusCode());
-		// System.out.println(response.getBody());
-
+		System.out.println("Headers : " + response.getHeaders());
+		System.out.println("Body : " + response.getBody());
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(PubmedArticleSet.class);
 			XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
 			xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 			XMLStreamReader xmlStreamReader = xmlInputFactory
-					.createXMLStreamReader(new StreamSource(new ByteArrayInputStream(response.getBody().getBytes())));
+					.createXMLStreamReader(new ByteArrayInputStream(response.getBody().getBytes("UTF-8")));
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			PubmedArticleSet pubmedArticleSet = (PubmedArticleSet) unmarshaller.unmarshal(xmlStreamReader);
 			System.out.println("pubmedArticleSet :: " + pubmedArticleSet);
@@ -149,8 +147,7 @@ public class NCBIServiceHelper {
 			/**
 			 * {@link PubmedArticle } {@link PubmedBookArticle }
 			 */
-			int totalCount = 0;
-			List<Integer> ids = new ArrayList<>();
+
 			for (Object o : pubmedArticleSetObjects) {
 				if (o instanceof PubmedArticle) {
 					System.out.println("<!-------------------- ARTICLE INFO START --------------------!>");
@@ -160,15 +157,18 @@ public class NCBIServiceHelper {
 					/**
 					 * Brand name / Journal Information
 					 */
+
 					Journal journal = article.getJournal();
 					System.out.println("Brand Name(Journal) : " + journal.getTitle());
 					/**
 					 * Catalogue Number
 					 */
+
 					System.out.println("Catalogue Number(PMID) : " + medlineCitation.getPMID().getvalue());
 					/**
 					 * Authors
 					 */
+
 					System.out.println("Article Title : " + article.getArticleTitle().getvalue());
 					AuthorList authorList = article.getAuthorList();
 					System.out.println("Number of authors : " + authorList.getAuthor().size());
@@ -215,6 +215,9 @@ public class NCBIServiceHelper {
 		} catch (XMLStreamException e) {
 			e.printStackTrace();
 			return null;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -233,6 +236,17 @@ public class NCBIServiceHelper {
 				initials = ((Initials) o).getvalue();
 		}
 		return initials + ". " + firstName + " " + lastName;
+	}
+
+	protected static String convertToCommaSeperatedString(List<Integer> uIds) {
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
+		for (Integer id : uIds) {
+			sb.append(Integer.toString(id));
+			if (++i < uIds.size())
+				sb.append(",");
+		}
+		return sb.toString();
 	}
 
 }
