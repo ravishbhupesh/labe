@@ -30,14 +30,18 @@ public class PublicationSearchController {
 	@RequestMapping("/search")
 	public String search(@RequestParam(value = "db") String db,
 			@RequestParam(value = "hostCellOrCellType") String hostCellOrCellType,
-			@RequestParam(value = "experiment") String experiment) {
+			@RequestParam(value = "experiment") String experiment,
+			@RequestParam(value = "addParams") String addParams) {
 		System.out.println("Got a search request with HostCellOrCellType : " + hostCellOrCellType + ": EXPERIMENT : "
 				+ experiment);
 		if (ncbiService == null) {
 			System.out.println("NCBIService is NULL!");
 			return SearchConstants.SEARCH_FAILURE;
 		}
-		NCBISearchResultDTO searchResultDTO = ncbiService.search(new NCBISearchDTO(db, hostCellOrCellType, experiment));
+		NCBISearchResultDTO searchResultDTO = ncbiService
+				.search(new NCBISearchDTO(db, hostCellOrCellType, experiment, addParams));
+		if (null == searchResultDTO)
+			return SearchConstants.SEARCH_FAILURE;
 		System.out.println(searchResultDTO);
 		return SearchConstants.SEARCH_SUCCESS;
 	}

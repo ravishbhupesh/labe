@@ -47,6 +47,8 @@ public final class NCBIEUtilURLBuilder {
 		searchInfo.append(searchDTO.getExperiment());
 		searchInfo.append(" ");
 		searchInfo.append(searchDTO.getHostCellOrCellType());
+		searchInfo.append(" ");
+		searchInfo.append(searchDTO.getAddParams());
 		sb.append(searchInfo.toString());
 		return sb.toString();
 	}

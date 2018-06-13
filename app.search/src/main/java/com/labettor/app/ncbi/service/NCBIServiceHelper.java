@@ -1,7 +1,6 @@
 package com.labettor.app.ncbi.service;
 
 import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,25 +18,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.labettor.app.ncbi.dto.NCBISearchDTO;
 import com.labettor.app.ncbi.dto.NCBISearchResultDTO;
+import com.labettor.app.ncbi.service.response.parser.ESearchResponseParser;
+import com.labettor.app.ncbi.service.response.parser.ESearchResponseParserFactory;
 import com.labettor.app.ncbi.utils.NCBIEUtilURLBuilder;
 import com.labettor.thirdparty.esearch.Count;
 import com.labettor.thirdparty.esearch.ESearchResult;
 import com.labettor.thirdparty.esearch.Id;
 import com.labettor.thirdparty.esearch.IdList;
-import com.labettor.thirdparty.pubmed.Abstract;
-import com.labettor.thirdparty.pubmed.AbstractText;
-import com.labettor.thirdparty.pubmed.AffiliationInfo;
-import com.labettor.thirdparty.pubmed.Article;
-import com.labettor.thirdparty.pubmed.Author;
-import com.labettor.thirdparty.pubmed.AuthorList;
-import com.labettor.thirdparty.pubmed.ForeName;
-import com.labettor.thirdparty.pubmed.Initials;
-import com.labettor.thirdparty.pubmed.Journal;
-import com.labettor.thirdparty.pubmed.LastName;
-import com.labettor.thirdparty.pubmed.MedlineCitation;
-import com.labettor.thirdparty.pubmed.PubmedArticle;
-import com.labettor.thirdparty.pubmed.PubmedArticleSet;
-import com.labettor.thirdparty.pubmed.PubmedBookArticle;
 
 public class NCBIServiceHelper {
 
@@ -51,8 +38,9 @@ public class NCBIServiceHelper {
 	}
 
 	private final int MAX_ID = 2;
-
 	private final NCBIEUtilURLBuilder urlBuilder = NCBIEUtilURLBuilder.getInstance();
+	private final ESearchResponseParserFactory eSearchResponseParserFactory = ESearchResponseParserFactory
+			.getInstance();
 
 	public NCBISearchResultDTO einfo(NCBISearchDTO searchDTO) {
 		System.out.println("Request Received : " + searchDTO);
@@ -63,7 +51,7 @@ public class NCBIServiceHelper {
 		System.out.println("StatusCode : " + response.getStatusCode());
 		System.out.println(response.getBody());
 		NCBISearchResultDTO searchResultDTO = new NCBISearchResultDTO.NCBISearchResultDTOBuilder(searchDTO.getDb(),
-				searchDTO.getHostCellOrCellType(), searchDTO.getExperiment()).build();
+				searchDTO.getHostCellOrCellType(), searchDTO.getExperiment(), searchDTO.getAddParams()).build();
 		return searchResultDTO;
 	}
 
@@ -75,8 +63,6 @@ public class NCBIServiceHelper {
 		ResponseEntity<String> response = restTemplate.getForEntity(searchUrl, String.class);
 		System.out.println("StatusCode : " + response.getStatusCode());
 		System.out.println(response.getBody());
-		// ObjectFactory objectFactory = new ObjectFactory();
-
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(ESearchResult.class);
 			XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
@@ -134,108 +120,10 @@ public class NCBIServiceHelper {
 		System.out.println("StatusCode : " + response.getStatusCode());
 		System.out.println("Headers : " + response.getHeaders());
 		System.out.println("Body : " + response.getBody());
-		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(PubmedArticleSet.class);
-			XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
-			xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
-			XMLStreamReader xmlStreamReader = xmlInputFactory
-					.createXMLStreamReader(new ByteArrayInputStream(response.getBody().getBytes("UTF-8")));
-			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			PubmedArticleSet pubmedArticleSet = (PubmedArticleSet) unmarshaller.unmarshal(xmlStreamReader);
-			System.out.println("pubmedArticleSet :: " + pubmedArticleSet);
-			List<Object> pubmedArticleSetObjects = pubmedArticleSet.getPubmedArticleOrPubmedBookArticle();
-			/**
-			 * {@link PubmedArticle } {@link PubmedBookArticle }
-			 */
+		ESearchResponseParser parser = eSearchResponseParserFactory.getESearchResponseParser(searchResultDTO.getDb());
+		parser.parser(response.getBody().getBytes());
 
-			for (Object o : pubmedArticleSetObjects) {
-				if (o instanceof PubmedArticle) {
-					System.out.println("<!-------------------- ARTICLE INFO START --------------------!>");
-					PubmedArticle pubmedArticle = (PubmedArticle) o;
-					MedlineCitation medlineCitation = pubmedArticle.getMedlineCitation();
-					Article article = medlineCitation.getArticle();
-					/**
-					 * Brand name / Journal Information
-					 */
-
-					Journal journal = article.getJournal();
-					System.out.println("Brand Name(Journal) : " + journal.getTitle());
-					/**
-					 * Catalogue Number
-					 */
-
-					System.out.println("Catalogue Number(PMID) : " + medlineCitation.getPMID().getvalue());
-					/**
-					 * Authors
-					 */
-
-					System.out.println("Article Title : " + article.getArticleTitle().getvalue());
-					AuthorList authorList = article.getAuthorList();
-					System.out.println("Number of authors : " + authorList.getAuthor().size());
-					for (Author author : authorList.getAuthor()) {
-						System.out.println("Name : "
-								+ formatAuthorName(author.getLastNameOrForeNameOrInitialsOrSuffixOrCollectiveName()));
-						System.out.println("Affiliated To : ");
-						int i = 1;
-						for (AffiliationInfo affiliationInfo : author.getAffiliationInfo()) {
-							System.out.println(i++ + ". " + affiliationInfo.getAffiliation());
-						}
-					}
-					/**
-					 * Product Link
-					 */
-
-					/**
-					 * Publication Link
-					 */
-
-					/**
-					 * Protocol
-					 */
-
-					/**
-					 * Additional information
-					 */
-					Abstract articleAbstract = article.getAbstract();
-					System.out.println("Additional information(abstract) : ");
-					for (AbstractText abstractText : articleAbstract.getAbstractText()) {
-						System.out.println(" - " + abstractText.getvalue());
-					}
-					System.out.println("<!-------------------- ARTICLE INFO END   --------------------!>");
-				}
-				if (o instanceof PubmedBookArticle) {
-					PubmedBookArticle pubmedBookArticle = (PubmedBookArticle) o;
-					System.out.println(pubmedBookArticle);
-				}
-			}
-			return null;
-		} catch (JAXBException e) {
-			e.printStackTrace();
-			return null;
-		} catch (XMLStreamException e) {
-			e.printStackTrace();
-			return null;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private String formatAuthorName(List<Object> lastNameOrForeNameOrInitialsOrSuffixOrCollectiveName) {
-		String lastName = null, firstName = null, initials = null;
-		for (Object o : lastNameOrForeNameOrInitialsOrSuffixOrCollectiveName) {
-			/**
-			 * * {@link LastName } {@link ForeName } {@link Initials } {@link Suffix }
-			 * {@link CollectiveName }
-			 */
-			if (o instanceof LastName)
-				lastName = ((LastName) o).getvalue();
-			if (o instanceof ForeName)
-				firstName = ((ForeName) o).getvalue();
-			if (o instanceof Initials)
-				initials = ((Initials) o).getvalue();
-		}
-		return initials + ". " + firstName + " " + lastName;
+		return null;
 	}
 
 	protected static String convertToCommaSeperatedString(List<Integer> uIds) {

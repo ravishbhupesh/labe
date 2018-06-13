@@ -5,11 +5,13 @@ public class NCBISearchDTO {
 	private String db;
 	private String hostCellOrCellType;
 	private String experiment;
+	private String addParams;
 
-	public NCBISearchDTO(String db, String hostCellOrCellType, String experiment) {
+	public NCBISearchDTO(String db, String hostCellOrCellType, String experiment, String addParams) {
 		this.db = db;
 		this.hostCellOrCellType = hostCellOrCellType;
 		this.experiment = experiment;
+		this.addParams = addParams;
 	}
 
 	public String getDb() {
@@ -22,6 +24,14 @@ public class NCBISearchDTO {
 
 	public String getExperiment() {
 		return experiment;
+	}
+
+	public String getAddParams() {
+		return addParams;
+	}
+
+	public void setAddParams(String addParams) {
+		this.addParams = addParams;
 	}
 
 	public String toString() {

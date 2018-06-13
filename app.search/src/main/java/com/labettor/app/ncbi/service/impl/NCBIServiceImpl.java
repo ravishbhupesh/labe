@@ -26,9 +26,11 @@ public class NCBIServiceImpl implements NCBIService {
 	@Override
 	public NCBISearchResultDTO search(NCBISearchDTO searchDTO) {
 		NCBISearchResultDTO searchResultDTO = new NCBISearchResultDTO.NCBISearchResultDTOBuilder(searchDTO.getDb(),
-				searchDTO.getHostCellOrCellType(), searchDTO.getExperiment()).build();
+				searchDTO.getHostCellOrCellType(), searchDTO.getExperiment(), searchDTO.getAddParams()).build();
 		List<Integer> uIds = HELPER.esearch(searchDTO);
 		searchResultDTO = HELPER.efetch(uIds, searchResultDTO);
+		if (null == searchResultDTO)
+			return null;
 		return searchResultDTO;
 	}
 

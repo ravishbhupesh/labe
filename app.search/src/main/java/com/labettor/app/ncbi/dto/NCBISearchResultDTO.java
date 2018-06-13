@@ -11,6 +11,7 @@ public class NCBISearchResultDTO {
 	private String db;
 	private String hostCellOrCellType;
 	private String experiment;
+	private String addParams;
 	/**
 	 * Results
 	 */
@@ -102,6 +103,14 @@ public class NCBISearchResultDTO {
 		this.additionalInformation = additionalInformation;
 	}
 
+	public String getAddParams() {
+		return addParams;
+	}
+
+	public void setAddParams(String addParams) {
+		this.addParams = addParams;
+	}
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Db : " + this.getDb());
@@ -123,6 +132,7 @@ public class NCBISearchResultDTO {
 		sb.append("Protocol : " + this.getProtocol());
 		sb.append("\n");
 		sb.append("Additional Information : " + this.getAdditionalInformation());
+		sb.append("Additional Parameters : " + this.addParams);
 		return sb.toString();
 	}
 
@@ -138,11 +148,13 @@ public class NCBISearchResultDTO {
 		private String publicationLink;
 		private String protocol;
 		private String additionalInformation;
+		private String addParams;
 
-		public NCBISearchResultDTOBuilder(String db, String hostCellOrCellType, String experiment) {
+		public NCBISearchResultDTOBuilder(String db, String hostCellOrCellType, String experiment, String addParams) {
 			this.db = db;
 			this.hostCellOrCellType = hostCellOrCellType;
 			this.experiment = experiment;
+			this.addParams = addParams;
 		}
 
 		public NCBISearchResultDTOBuilder setBrandName(String brandName) {
@@ -185,6 +197,7 @@ public class NCBISearchResultDTO {
 			dto.setDb(this.db);
 			dto.setHostCellOrCellType(this.hostCellOrCellType);
 			dto.setExperiment(this.experiment);
+			dto.setAddParams(this.addParams);
 			dto.setBrandName(this.brandName);
 			dto.setCatalogueNumber(this.catalogueNumber);
 			dto.setAuthor(this.author);
