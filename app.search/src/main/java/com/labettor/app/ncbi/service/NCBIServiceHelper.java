@@ -57,6 +57,7 @@ public class NCBIServiceHelper {
 	}
 
 	public List<Integer> esearch(NCBISearchDTO searchDTO) {
+		System.out.println("NCBIServiceHelper::esearch::START");
 		log("Request Received : " + searchDTO);
 		String searchUrl = urlBuilder.searchURL(searchDTO);
 		log("URL : " + searchUrl);
@@ -97,6 +98,7 @@ public class NCBIServiceHelper {
 				}
 			}
 			log("ids : " + ids);
+			System.out.println("NCBIServiceHelper::esearch::END");
 			return ids;
 		} catch (JAXBException e) {
 			e.printStackTrace();
@@ -108,6 +110,7 @@ public class NCBIServiceHelper {
 	}
 
 	public NCBISearchResultsDTO efetch(List<Integer> uIds, NCBISearchResultsDTO searchResultsDTO) {
+		System.out.println("NCBIServiceHelper::efetch::START");
 		log("Request a list : " + uIds);
 		// String fetchUrl = urlBuilder.fetchURL(searchResultDTO.getDb(),
 		// convertToCommaSeperatedString(uIds));
@@ -120,7 +123,8 @@ public class NCBIServiceHelper {
 		ResponseEntity<String> response = restTemplate.getForEntity(fetchUrl, String.class);
 		log("StatusCode : " + response.getStatusCode());
 		log("Headers : " + response.getHeaders());
-		log("Body : " + response.getBody());
+		// log("Body : " + response.getBody());
+		// System.out.println("Body : " + response.getBody());
 		ESearchResponseParser parser = eSearchResponseParserFactory
 				.getESearchResponseParser(searchResultsDTO.getSearchDTO().getDb());
 		try {
@@ -130,6 +134,7 @@ public class NCBIServiceHelper {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		System.out.println("NCBIServiceHelper::efetch::END");
 		return searchResultsDTO;
 	}
 

@@ -23,18 +23,25 @@ public class NCBIController {
 	}
 
 	@GetMapping("/labbetor/search")
-	public String cForm(Model model) {
+	public String searchForm(Model model) {
+		log("NCBIController::searchForm::START");
 		model.addAttribute("search", new NCBISearchDTO());
+		log("NCBIController::searchForm::END");
 		return "search";
 	}
 
 	@PostMapping("/labbetor/search")
-	public ModelAndView logSubmit(@ModelAttribute NCBISearchDTO search) {
-		System.out.println("-->>" + search);
+	public ModelAndView searchSubmit(@ModelAttribute NCBISearchDTO search) {
+		log("NCBIController::searchSubmit::START");
 		NCBISearchResultsDTO searchResultsDTO = ncbiService.search(search);
-		System.out.println("==>>" + searchResultsDTO);
+		// System.out.println("==>>" + searchResultsDTO);
 		ModelAndView modelAndView = new ModelAndView("result");
 		modelAndView.addObject("search", searchResultsDTO);
+		log("NCBIController::searchSubmit::END");
 		return modelAndView;
+	}
+
+	private void log(String msg) {
+		System.out.println(msg);
 	}
 }

@@ -31,6 +31,7 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 
 	@Override
 	public List<NCBISearchResultDTO> parser(byte[] response) {
+		System.out.println("PubmedESearchResponseParser::parser::START");
 		List<NCBISearchResultDTO> results = new ArrayList<>();
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(PubmedArticleSet.class);
@@ -125,12 +126,15 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 					log(pubmedBookArticle.toString());
 				}
 			}
+			System.out.println("PubmedESearchResponseParser::parser::END");
 			return results;
 		} catch (JAXBException e) {
 			e.printStackTrace();
+			System.out.println("PubmedESearchResponseParser::parser::EXCEPTION");
 			return null;
 		} catch (XMLStreamException e) {
 			e.printStackTrace();
+			System.out.println("PubmedESearchResponseParser::parser::EXCEPTION");
 			return null;
 		}
 	}

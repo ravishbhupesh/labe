@@ -37,6 +37,7 @@ public final class NCBIEUtilURLBuilder {
 	 * isolation Staphylococcus aureus
 	 */
 	public String searchURL(NCBISearchDTO searchDTO) {
+		System.out.println("NCBIEUtilURLBuilder::searchURL::START");
 		StringBuilder sb = new StringBuilder(NCBIEUtilitiesConstants.BASE_URL);
 		sb.append(NCBIEUtilitiesConstants.URL_EXT_ESEARCH);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_START);
@@ -52,10 +53,12 @@ public final class NCBIEUtilURLBuilder {
 			searchInfo.append("AND+free+fulltext%5filter%5");
 		}
 		sb.append(searchInfo.toString());
+		System.out.println("NCBIEUtilURLBuilder::searchURL::END");
 		return sb.toString();
 	}
 
 	public String fetchURL(String db, String idInfo) {
+		System.out.println("NCBIEUtilURLBuilder::fetchURL::START");
 		StringBuilder sb = new StringBuilder(NCBIEUtilitiesConstants.BASE_URL);
 		sb.append(NCBIEUtilitiesConstants.URL_EXT_EFETCH);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_START);
@@ -65,6 +68,7 @@ public final class NCBIEUtilURLBuilder {
 		sb.append("id=" + idInfo);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_RTRN_MODE);
+		System.out.println("NCBIEUtilURLBuilder::fetchURL::END");
 		return sb.toString();
 	}
 

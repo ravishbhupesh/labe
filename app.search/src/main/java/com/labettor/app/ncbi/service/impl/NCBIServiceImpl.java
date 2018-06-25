@@ -25,7 +25,7 @@ public class NCBIServiceImpl implements NCBIService {
 
 	@Override
 	public NCBISearchResultsDTO search(NCBISearchDTO searchDTO) {
-
+		System.out.println("NCBIServiceImpl::search::START");
 		NCBISearchResultsDTO searchResultsDTO = new NCBISearchResultsDTO(searchDTO);
 		List<Integer> uIds = HELPER.esearch(searchDTO);
 		if (null != uIds && uIds.size() == 0) {
@@ -34,6 +34,7 @@ public class NCBIServiceImpl implements NCBIService {
 		searchResultsDTO = HELPER.efetch(uIds, searchResultsDTO);
 		if (null == searchResultsDTO)
 			return null;
+		System.out.println("NCBIServiceImpl::search::END");
 		return searchResultsDTO;
 	}
 

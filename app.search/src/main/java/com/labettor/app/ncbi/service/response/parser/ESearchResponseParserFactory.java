@@ -15,10 +15,14 @@ public class ESearchResponseParserFactory {
 	}
 
 	public ESearchResponseParser getESearchResponseParser(String db) {
-		if ("pubmed".equals(db))
+		System.out.println("ESearchResponseParserFactory::getESearchResponseParser::START");
+		if ("pubmed".equals(db)) {
+			System.out.println("ESearchResponseParserFactory::getESearchResponseParser::END");
 			return new PubmedESearchResponseParser();
-		else if ("pmc".equals(db))
+		} else if ("pmc".equals(db)) {
+			System.out.println("ESearchResponseParserFactory::getESearchResponseParser::END");
 			return new PMCESearchResponseParser();
+		}
 		return null;
 	}
 }
