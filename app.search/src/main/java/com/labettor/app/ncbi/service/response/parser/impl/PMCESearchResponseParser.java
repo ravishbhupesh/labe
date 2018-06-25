@@ -12,6 +12,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 
+import com.labettor.app.ncbi.dto.NCBISearchResultDTO;
 import com.labettor.app.ncbi.service.response.parser.ESearchResponseParser;
 import com.labettor.thirdparty.pmc.Article;
 import com.labettor.thirdparty.pmc.PmcArticleset;
@@ -19,7 +20,7 @@ import com.labettor.thirdparty.pmc.PmcArticleset;
 public class PMCESearchResponseParser implements ESearchResponseParser {
 
 	@Override
-	public List<Object> parser(byte[] response) {
+	public List<NCBISearchResultDTO> parser(byte[] response) {
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(PmcArticleset.class);
 			XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
@@ -36,8 +37,10 @@ public class PMCESearchResponseParser implements ESearchResponseParser {
 			 * {@link TranslationStack } {@link QueryTranslation } {@link ERROR }
 			 */
 			int totalCount = 0;
-			List<Object> results = new ArrayList<>();
+			List<NCBISearchResultDTO> results = new ArrayList<>();
 			for (Article a : articles) {
+				System.out.println(a);
+				System.out.println("a.getArticleType() -> " + a.getArticleType());
 			}
 			return results;
 		} catch (JAXBException e) {

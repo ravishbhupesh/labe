@@ -6,7 +6,7 @@ package com.labettor.app.ncbi.service.impl;
 import java.util.List;
 
 import com.labettor.app.ncbi.dto.NCBISearchDTO;
-import com.labettor.app.ncbi.dto.NCBISearchResultDTO;
+import com.labettor.app.ncbi.dto.NCBISearchResultsDTO;
 import com.labettor.app.ncbi.service.NCBIService;
 import com.labettor.app.ncbi.service.NCBIServiceHelper;
 
@@ -19,19 +19,22 @@ public class NCBIServiceImpl implements NCBIService {
 	private final NCBIServiceHelper HELPER = NCBIServiceHelper.getInstance();
 
 	@Override
-	public NCBISearchResultDTO info(NCBISearchDTO searchDTO) {
+	public NCBISearchResultsDTO info(NCBISearchDTO searchDTO) {
 		return HELPER.einfo(searchDTO);
 	}
 
 	@Override
-	public NCBISearchResultDTO search(NCBISearchDTO searchDTO) {
-		NCBISearchResultDTO searchResultDTO = new NCBISearchResultDTO.NCBISearchResultDTOBuilder(searchDTO.getDb(),
-				searchDTO.getHostCellOrCellType(), searchDTO.getExperiment(), searchDTO.getAddParams()).build();
+	public NCBISearchResultsDTO search(NCBISearchDTO searchDTO) {
+
+		NCBISearchResultsDTO searchResultsDTO = new NCBISearchResultsDTO(searchDTO);
 		List<Integer> uIds = HELPER.esearch(searchDTO);
-		searchResultDTO = HELPER.efetch(uIds, searchResultDTO);
-		if (null == searchResultDTO)
+		if (null != uIds && uIds.size() == 0) {
+			return searchResultsDTO;
+		}
+		searchResultsDTO = HELPER.efetch(uIds, searchResultsDTO);
+		if (null == searchResultsDTO)
 			return null;
-		return searchResultDTO;
+		return searchResultsDTO;
 	}
 
 }

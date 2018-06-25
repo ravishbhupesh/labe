@@ -2,19 +2,9 @@ package com.labettor.app.ncbi.dto;
 
 public class NCBISearchResultDTO {
 
-	private NCBISearchResultDTO() {
+	public NCBISearchResultDTO() {
 	}
 
-	/**
-	 * Inputs
-	 */
-	private String db;
-	private String hostCellOrCellType;
-	private String experiment;
-	private String addParams;
-	/**
-	 * Results
-	 */
 	private String brandName;
 	private String catalogueNumber;
 	private String author;
@@ -23,29 +13,11 @@ public class NCBISearchResultDTO {
 	private String protocol;
 	private String additionalInformation;
 
-	public String getDb() {
-		return db;
-	}
-
-	public void setDb(String db) {
-		this.db = db;
-	}
-
-	public String getHostCellOrCellType() {
-		return hostCellOrCellType;
-	}
-
-	public void setHostCellOrCellType(String hostCellOrCellType) {
-		this.hostCellOrCellType = hostCellOrCellType;
-	}
-
-	public String getExperiment() {
-		return experiment;
-	}
-
-	public void setExperiment(String experiment) {
-		this.experiment = experiment;
-	}
+	/**
+	 * status = 0 : Response Received <br/>
+	 * status = 1 : No Search Records
+	 */
+	private int status = 0;
 
 	public String getBrandName() {
 		return brandName;
@@ -103,22 +75,16 @@ public class NCBISearchResultDTO {
 		this.additionalInformation = additionalInformation;
 	}
 
-	public String getAddParams() {
-		return addParams;
+	public int getStatus() {
+		return status;
 	}
 
-	public void setAddParams(String addParams) {
-		this.addParams = addParams;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Db : " + this.getDb());
-		sb.append("\n");
-		sb.append("Host : " + this.getHostCellOrCellType());
-		sb.append("\n");
-		sb.append("Experiment : " + this.getExperiment());
-		sb.append("\n");
 		sb.append("Brand Name : " + this.getBrandName());
 		sb.append("\n");
 		sb.append("Catalogue Number : " + this.getCatalogueNumber());
@@ -132,81 +98,6 @@ public class NCBISearchResultDTO {
 		sb.append("Protocol : " + this.getProtocol());
 		sb.append("\n");
 		sb.append("Additional Information : " + this.getAdditionalInformation());
-		sb.append("Additional Parameters : " + this.addParams);
 		return sb.toString();
 	}
-
-	public static class NCBISearchResultDTOBuilder {
-
-		private String db;
-		private String hostCellOrCellType;
-		private String experiment;
-		private String brandName;
-		private String catalogueNumber;
-		private String author;
-		private String productLink;
-		private String publicationLink;
-		private String protocol;
-		private String additionalInformation;
-		private String addParams;
-
-		public NCBISearchResultDTOBuilder(String db, String hostCellOrCellType, String experiment, String addParams) {
-			this.db = db;
-			this.hostCellOrCellType = hostCellOrCellType;
-			this.experiment = experiment;
-			this.addParams = addParams;
-		}
-
-		public NCBISearchResultDTOBuilder setBrandName(String brandName) {
-			this.brandName = brandName;
-			return this;
-		}
-
-		public NCBISearchResultDTOBuilder setCatalogueNumber(String catalogueNumber) {
-			this.catalogueNumber = catalogueNumber;
-			return this;
-		}
-
-		public NCBISearchResultDTOBuilder setAuthor(String author) {
-			this.author = author;
-			return this;
-		}
-
-		public NCBISearchResultDTOBuilder setProductLink(String productLink) {
-			this.productLink = productLink;
-			return this;
-		}
-
-		public NCBISearchResultDTOBuilder setPublicationLink(String publicationLink) {
-			this.publicationLink = publicationLink;
-			return this;
-		}
-
-		public NCBISearchResultDTOBuilder setProtocol(String protocol) {
-			this.protocol = protocol;
-			return this;
-		}
-
-		public NCBISearchResultDTOBuilder setAdditionalInformation(String additionalInformation) {
-			this.additionalInformation = additionalInformation;
-			return this;
-		}
-
-		public NCBISearchResultDTO build() {
-			NCBISearchResultDTO dto = new NCBISearchResultDTO();
-			dto.setDb(this.db);
-			dto.setHostCellOrCellType(this.hostCellOrCellType);
-			dto.setExperiment(this.experiment);
-			dto.setAddParams(this.addParams);
-			dto.setBrandName(this.brandName);
-			dto.setCatalogueNumber(this.catalogueNumber);
-			dto.setAuthor(this.author);
-			dto.setProductLink(this.productLink);
-			dto.setPublicationLink(this.publicationLink);
-			dto.setProtocol(this.protocol);
-			dto.setAdditionalInformation(this.additionalInformation);
-			return dto;
-		}
-	}
-
 }

@@ -5,42 +5,72 @@ public class NCBISearchDTO {
 	private String db;
 	private String hostCellOrCellType;
 	private String experiment;
-	private String addParams;
+	private boolean freeFullText;
+	private String dateFrom;
 
-	public NCBISearchDTO(String db, String hostCellOrCellType, String experiment, String addParams) {
+	public NCBISearchDTO() {
+	}
+
+	public NCBISearchDTO(String db, String hostCellOrCellType, String experiment, boolean freeFullText,
+			String dateFrom) {
 		this.db = db;
 		this.hostCellOrCellType = hostCellOrCellType;
 		this.experiment = experiment;
-		this.addParams = addParams;
+		this.freeFullText = freeFullText;
+		this.dateFrom = dateFrom;
 	}
 
 	public String getDb() {
 		return db;
 	}
 
+	public void setDb(String db) {
+		this.db = db;
+	}
+
 	public String getHostCellOrCellType() {
 		return hostCellOrCellType;
+	}
+
+	public void setHostCellOrCellType(String hostCellOrCellType) {
+		this.hostCellOrCellType = hostCellOrCellType;
 	}
 
 	public String getExperiment() {
 		return experiment;
 	}
 
-	public String getAddParams() {
-		return addParams;
+	public void setExperiment(String experiment) {
+		this.experiment = experiment;
 	}
 
-	public void setAddParams(String addParams) {
-		this.addParams = addParams;
+	public boolean isFreeFullText() {
+		return freeFullText;
+	}
+
+	public void setFreeFullText(boolean freeFullText) {
+		this.freeFullText = freeFullText;
+	}
+
+	public String getDateFrom() {
+		return dateFrom;
+	}
+
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
 	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Db : " + this.getDb());
 		sb.append("\n");
-		sb.append("HostCellOrCellType : " + this.getHostCellOrCellType());
+		sb.append("HostCell/CellType : " + this.getHostCellOrCellType());
 		sb.append("\n");
 		sb.append("Experiment : " + this.getExperiment());
+		sb.append("\n");
+		sb.append("Free Full Text : " + this.isFreeFullText());
+		sb.append("\n");
+		sb.append("Date From : " + this.getDateFrom());
 		return sb.toString();
 	}
 }

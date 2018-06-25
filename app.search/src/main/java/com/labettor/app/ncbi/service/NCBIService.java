@@ -4,14 +4,14 @@
 package com.labettor.app.ncbi.service;
 
 import com.labettor.app.ncbi.dto.NCBISearchDTO;
-import com.labettor.app.ncbi.dto.NCBISearchResultDTO;
+import com.labettor.app.ncbi.dto.NCBISearchResultsDTO;
 
 /**
  *
  */
 public interface NCBIService {
 
-	NCBISearchResultDTO info(NCBISearchDTO searchDTO);
-	
-	NCBISearchResultDTO search(NCBISearchDTO searchDTO);
+	NCBISearchResultsDTO info(NCBISearchDTO searchDTO);
+
+	NCBISearchResultsDTO search(NCBISearchDTO searchDTO);
 }

@@ -45,10 +45,12 @@ public final class NCBIEUtilURLBuilder {
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
 		StringBuilder searchInfo = new StringBuilder("term=");
 		searchInfo.append(searchDTO.getExperiment());
-		searchInfo.append(" ");
+		searchInfo.append("+");
 		searchInfo.append(searchDTO.getHostCellOrCellType());
-		searchInfo.append(" ");
-		searchInfo.append(searchDTO.getAddParams());
+		if (searchDTO.isFreeFullText()) {
+			searchInfo.append("+");
+			searchInfo.append("AND+free+fulltext%5filter%5");
+		}
 		sb.append(searchInfo.toString());
 		return sb.toString();
 	}
