@@ -37,7 +37,7 @@ public final class NCBIEUtilURLBuilder {
 	 * isolation Staphylococcus aureus
 	 */
 	public String searchURL(NCBISearchDTO searchDTO) {
-		System.out.println("NCBIEUtilURLBuilder::searchURL::START");
+		Logger.log("NCBIEUtilURLBuilder::searchURL::START");
 		StringBuilder sb = new StringBuilder(NCBIEUtilitiesConstants.BASE_URL);
 		sb.append(NCBIEUtilitiesConstants.URL_EXT_ESEARCH);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_START);
@@ -52,13 +52,21 @@ public final class NCBIEUtilURLBuilder {
 			searchInfo.append("+");
 			searchInfo.append("AND+free+fulltext%5filter%5");
 		}
+		searchInfo.append("&");
+		searchInfo.append("reldate=3650&datetype=edat");
 		sb.append(searchInfo.toString());
-		System.out.println("NCBIEUtilURLBuilder::searchURL::END");
+		Logger.log("NCBIEUtilURLBuilder::searchURL::END");
 		return sb.toString();
 	}
 
+	/*
+	 * public static void main(String[] args) { NCBIEUtilURLBuilder builder =
+	 * NCBIEUtilURLBuilder.getInstance(); System.out.println(builder.searchURL(new
+	 * NCBISearchDTO("pubmed", "HUVEC", "cytotixity", true, ""))); }
+	 */
+
 	public String fetchURL(String db, String idInfo) {
-		System.out.println("NCBIEUtilURLBuilder::fetchURL::START");
+		Logger.log("NCBIEUtilURLBuilder::fetchURL::START");
 		StringBuilder sb = new StringBuilder(NCBIEUtilitiesConstants.BASE_URL);
 		sb.append(NCBIEUtilitiesConstants.URL_EXT_EFETCH);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_START);
@@ -68,7 +76,7 @@ public final class NCBIEUtilURLBuilder {
 		sb.append("id=" + idInfo);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_RTRN_MODE);
-		System.out.println("NCBIEUtilURLBuilder::fetchURL::END");
+		Logger.log("NCBIEUtilURLBuilder::fetchURL::END");
 		return sb.toString();
 	}
 

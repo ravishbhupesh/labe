@@ -13,6 +13,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import com.labettor.app.ncbi.dto.NCBISearchResultDTO;
 import com.labettor.app.ncbi.service.response.parser.ESearchResponseParser;
+import com.labettor.app.ncbi.utils.Logger;
 import com.labettor.thirdparty.pubmed.Abstract;
 import com.labettor.thirdparty.pubmed.AbstractText;
 import com.labettor.thirdparty.pubmed.Article;
@@ -31,7 +32,7 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 
 	@Override
 	public List<NCBISearchResultDTO> parser(byte[] response) {
-		System.out.println("PubmedESearchResponseParser::parser::START");
+		Logger.log("PubmedESearchResponseParser::parser::START");
 		List<NCBISearchResultDTO> results = new ArrayList<>();
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(PubmedArticleSet.class);
@@ -40,7 +41,7 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 			XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(new ByteArrayInputStream(response));
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			PubmedArticleSet pubmedArticleSet = (PubmedArticleSet) unmarshaller.unmarshal(xmlStreamReader);
-			log("pubmedArticleSet :: " + pubmedArticleSet);
+			Logger.log("pubmedArticleSet :: " + pubmedArticleSet);
 			List<Object> pubmedArticleSetObjects = pubmedArticleSet.getPubmedArticleOrPubmedBookArticle();
 			/**
 			 * {@link PubmedArticle } {@link PubmedBookArticle }
@@ -49,7 +50,7 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 			for (Object o : pubmedArticleSetObjects) {
 				if (o instanceof PubmedArticle) {
 					NCBISearchResultDTO dto = new NCBISearchResultDTO();
-					log("<!-------------------- ARTICLE INFO START --------------------!>");
+					Logger.log("<!-------------------- ARTICLE INFO START --------------------!>");
 					PubmedArticle pubmedArticle = (PubmedArticle) o;
 					MedlineCitation medlineCitation = pubmedArticle.getMedlineCitation();
 					Article article = medlineCitation.getArticle();
@@ -59,29 +60,28 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 
 					Journal journal = article.getJournal();
 					dto.setBrandName(journal.getTitle());
-					log("<<<< Brand Name(Journal) : " + journal.getTitle() + ">>>>");
+					Logger.log("<<<< Brand Name(Journal) : " + journal.getTitle() + ">>>>");
 					/**
 					 * Catalogue Number
 					 */
 
-					System.out
-							.println("<<<< Catalogue Number(PMID) : " + medlineCitation.getPMID().getvalue() + ">>>>");
+					Logger.log("<<<< Catalogue Number(PMID) : " + medlineCitation.getPMID().getvalue() + ">>>>");
 					dto.setCatalogueNumber(medlineCitation.getPMID().getvalue());
 					/**
 					 * Authors
 					 */
 
-					log("<<<< Article Title : " + article.getArticleTitle().getvalue() + ">>>>");
+					Logger.log("<<<< Article Title : " + article.getArticleTitle().getvalue() + ">>>>");
 					AuthorList authorList = article.getAuthorList();
-					log("Number of authors : " + authorList.getAuthor().size());
-					log("<!----- AUTHORS START ----->");
+					Logger.log("Number of authors : " + authorList.getAuthor().size());
+					Logger.log("<!----- AUTHORS START ----->");
 					int j = 1;
 					StringBuilder authors = new StringBuilder();
 					for (Author author : authorList.getAuthor()) {
 						authors.append(
 								formatAuthorName(author.getLastNameOrForeNameOrInitialsOrSuffixOrCollectiveName()));
 						authors.append(", ");
-						log(j++ + ". Name : "
+						Logger.log(j++ + ". Name : "
 								+ formatAuthorName(author.getLastNameOrForeNameOrInitialsOrSuffixOrCollectiveName()));
 						/*
 						 * log("Affiliated To : "); for (AffiliationInfo affiliationInfo :
@@ -90,7 +90,7 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 						 */
 					}
 					dto.setAuthor(authors.toString());
-					log("<!----- AUTHORS END ----->");
+					Logger.log("<!----- AUTHORS END ----->");
 					/**
 					 * Product Link
 					 */
@@ -108,34 +108,39 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 					 */
 					Abstract articleAbstract = article.getAbstract();
 					StringBuilder addInfo = new StringBuilder();
-					log("<!----- Additional information(abstract) START -----!>");
+					Logger.log("<!----- Additional information(abstract) START -----!>");
 					for (AbstractText abstractText : articleAbstract.getAbstractText()) {
-						log("->" + abstractText.getLabel() + " - " + abstractText.getvalue());
+						// Logger.log("->" + abstractText.getLabel() + " - " + abstractText.getvalue());
+						System.out.println("->" + abstractText.getLabel() + " - " + abstractText.getvalue());
+						if (abstractText.getLabel() != null && (abstractText.getLabel().contains("METHODS")
+								|| abstractText.getLabel().contains("Methods")
+								|| abstractText.getLabel().contains("MATERIALS AND METHODS")))
+							dto.setProtocol(abstractText.getvalue());
 						addInfo.append(abstractText.getLabel() + " - " + abstractText.getvalue());
-						addInfo.append("::");
+						addInfo.append("||||");
 						addInfo.append("\n");
 					}
 					dto.setAdditionalInformation(addInfo.toString());
-					log("<!----- Additional information(abstract) END -----!>");
-					log("<!-------------------- ARTICLE INFO END   --------------------!>");
+					Logger.log("<!----- Additional information(abstract) END -----!>");
+					Logger.log("<!-------------------- ARTICLE INFO END   --------------------!>");
 
 					results.add(dto);
 				}
 				if (o instanceof PubmedBookArticle) {
 					PubmedBookArticle pubmedBookArticle = (PubmedBookArticle) o;
-					log(pubmedBookArticle.toString());
+					Logger.log(pubmedBookArticle.toString());
 				}
 			}
-			System.out.println("PubmedESearchResponseParser::parser::END");
+			Logger.log("PubmedESearchResponseParser::parser::END");
 			return results;
 		} catch (JAXBException e) {
 			e.printStackTrace();
-			System.out.println("PubmedESearchResponseParser::parser::EXCEPTION");
-			return null;
+			Logger.log("PubmedESearchResponseParser::parser::EXCEPTION");
+			return results;
 		} catch (XMLStreamException e) {
 			e.printStackTrace();
-			System.out.println("PubmedESearchResponseParser::parser::EXCEPTION");
-			return null;
+			Logger.log("PubmedESearchResponseParser::parser::EXCEPTION");
+			return results;
 		}
 	}
 
@@ -154,10 +159,6 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 				initials = ((Initials) o).getvalue();
 		}
 		return initials + ". " + firstName + " " + lastName;
-	}
-
-	private void log(String msg) {
-		// System.out.println(msg);
 	}
 
 }

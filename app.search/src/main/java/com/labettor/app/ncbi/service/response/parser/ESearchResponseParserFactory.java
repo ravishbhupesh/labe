@@ -2,6 +2,7 @@ package com.labettor.app.ncbi.service.response.parser;
 
 import com.labettor.app.ncbi.service.response.parser.impl.PMCESearchResponseParser;
 import com.labettor.app.ncbi.service.response.parser.impl.PubmedESearchResponseParser;
+import com.labettor.app.ncbi.utils.Logger;
 
 public class ESearchResponseParserFactory {
 
@@ -15,12 +16,12 @@ public class ESearchResponseParserFactory {
 	}
 
 	public ESearchResponseParser getESearchResponseParser(String db) {
-		System.out.println("ESearchResponseParserFactory::getESearchResponseParser::START");
+		Logger.log("ESearchResponseParserFactory::getESearchResponseParser::START");
 		if ("pubmed".equals(db)) {
-			System.out.println("ESearchResponseParserFactory::getESearchResponseParser::END");
+			Logger.log("ESearchResponseParserFactory::getESearchResponseParser::END");
 			return new PubmedESearchResponseParser();
 		} else if ("pmc".equals(db)) {
-			System.out.println("ESearchResponseParserFactory::getESearchResponseParser::END");
+			Logger.log("ESearchResponseParserFactory::getESearchResponseParser::END");
 			return new PMCESearchResponseParser();
 		}
 		return null;

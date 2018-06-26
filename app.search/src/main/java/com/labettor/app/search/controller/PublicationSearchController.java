@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.labettor.app.ncbi.dto.NCBISearchDTO;
 import com.labettor.app.ncbi.dto.NCBISearchResultsDTO;
 import com.labettor.app.ncbi.service.NCBIService;
+import com.labettor.app.ncbi.utils.Logger;
 import com.labettor.app.search.constants.SearchConstants;
 
 /**
@@ -27,21 +28,21 @@ public class PublicationSearchController {
 		this.ncbiService = ncbiService;
 	}
 
-	@RequestMapping("/search")
+	@RequestMapping("/rest/search")
 	public String search(@RequestParam(value = "db") String db,
 			@RequestParam(value = "hostCellOrCellType") String hostCellOrCellType,
 			@RequestParam(value = "experiment") String experiment,
 			@RequestParam(value = "freeFullText", defaultValue = "true") boolean freeFullText,
 			@RequestParam(value = "dateFrom") String dateFrom) {
-		System.out.println("Got a search request with HostCellOrCellType : " + hostCellOrCellType + ": EXPERIMENT : "
+		Logger.log("Got a search request with HostCellOrCellType : " + hostCellOrCellType + ": EXPERIMENT : "
 				+ experiment);
 		if (ncbiService == null) {
-			System.out.println("NCBIService is NULL!");
+			Logger.log("NCBIService is NULL!");
 			return SearchConstants.SEARCH_FAILURE;
 		}
 		NCBISearchResultsDTO searchResultsDTO = ncbiService
 				.search(new NCBISearchDTO(db, hostCellOrCellType, experiment, freeFullText, dateFrom));
-		System.out.println(searchResultsDTO);
+		Logger.log(searchResultsDTO.toString());
 		return SearchConstants.SEARCH_SUCCESS;
 	}
 }

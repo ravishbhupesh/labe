@@ -12,13 +12,16 @@
 	<p th:text="'Free Full Text - ' + ${search.searchDTO.freeFullText}" />
 	<p th:text="'Date From - ' + ${search.searchDTO.dateFrom}" />
     <h1>Results</h1>
+    <p th:text="'Status - ' + ${search.status}" />
     <table border="1" >
       <tr>
         <th>Brand Name</th>
         <th>Catalogue Number</th>
         <th>Author</th>
+        <!-- 
         <th>Product Link</th>
         <th>Publication Link</th>
+         -->
         <th>Protocol</th>
         <th>Additional Information</th>
       </tr>
@@ -26,12 +29,16 @@
         <td th:text="${result.brandName}" />
         <td th:text="${result.catalogueNumber}" />
         <td th:text="${result.author}" />
+        <!-- 
         <td th:text="${result.productLink}" />
         <td th:text="${result.publicationLink}" />
+         -->
         <td th:text="${result.protocol}" />
         <td th:text="${result.additionalInformation}" />
       </tr>
     </table>
-    
+    <div align="center">
+    	<a href="/labbetor/search">Home</a>
+    </div>
 </body>
 </html>

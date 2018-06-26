@@ -6,10 +6,12 @@ import java.util.List;
 public class NCBISearchResultsDTO {
 
 	public NCBISearchResultsDTO() {
+		status = "SUCCESS";
 	}
 
 	public NCBISearchResultsDTO(NCBISearchDTO searchDTO) {
 		this.searchDTO = searchDTO;
+		status = "SUCCESS";
 	}
 
 	/**
@@ -21,11 +23,7 @@ public class NCBISearchResultsDTO {
 	 */
 	private List<NCBISearchResultDTO> results = new ArrayList<>();
 
-	/**
-	 * status = 0 : Response Received <br/>
-	 * status = 1 : No Search Records
-	 */
-	private int status = 0;
+	private String status;
 
 	public NCBISearchDTO getSearchDTO() {
 		return searchDTO;
@@ -35,11 +33,11 @@ public class NCBISearchResultsDTO {
 		this.searchDTO = searchDTO;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 

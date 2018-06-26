@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.labettor.app.ncbi.dto.NCBISearchDTO;
 import com.labettor.app.ncbi.dto.NCBISearchResultsDTO;
 import com.labettor.app.ncbi.service.NCBIService;
+import com.labettor.app.ncbi.utils.Logger;
 
 @Controller
 public class NCBIController {
@@ -24,24 +25,21 @@ public class NCBIController {
 
 	@GetMapping("/labbetor/search")
 	public String searchForm(Model model) {
-		log("NCBIController::searchForm::START");
+		Logger.log("NCBIController::searchForm::START");
 		model.addAttribute("search", new NCBISearchDTO());
-		log("NCBIController::searchForm::END");
+		Logger.log("NCBIController::searchForm::END");
 		return "search";
 	}
 
 	@PostMapping("/labbetor/search")
 	public ModelAndView searchSubmit(@ModelAttribute NCBISearchDTO search) {
-		log("NCBIController::searchSubmit::START");
+		Logger.log("NCBIController::searchSubmit::START");
 		NCBISearchResultsDTO searchResultsDTO = ncbiService.search(search);
-		// System.out.println("==>>" + searchResultsDTO);
+		// log("==>>" + searchResultsDTO);
 		ModelAndView modelAndView = new ModelAndView("result");
 		modelAndView.addObject("search", searchResultsDTO);
-		log("NCBIController::searchSubmit::END");
+		Logger.log("NCBIController::searchSubmit::END");
 		return modelAndView;
 	}
 
-	private void log(String msg) {
-		System.out.println(msg);
-	}
 }

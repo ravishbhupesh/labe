@@ -22,6 +22,7 @@ import com.labettor.app.ncbi.dto.NCBISearchResultDTO;
 import com.labettor.app.ncbi.dto.NCBISearchResultsDTO;
 import com.labettor.app.ncbi.service.response.parser.ESearchResponseParser;
 import com.labettor.app.ncbi.service.response.parser.ESearchResponseParserFactory;
+import com.labettor.app.ncbi.utils.Logger;
 import com.labettor.app.ncbi.utils.NCBIEUtilURLBuilder;
 import com.labettor.thirdparty.esearch.Count;
 import com.labettor.thirdparty.esearch.ESearchResult;
@@ -45,26 +46,26 @@ public class NCBIServiceHelper {
 			.getInstance();
 
 	public NCBISearchResultsDTO einfo(NCBISearchDTO searchDTO) {
-		log("Request Received : " + searchDTO);
+		Logger.log("Request Received : " + searchDTO);
 		String infoUrl = urlBuilder.searchURL(searchDTO);
-		log("URL : " + infoUrl);
+		Logger.log("URL : " + infoUrl);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(infoUrl, String.class);
-		log("StatusCode : " + response.getStatusCode());
-		log(response.getBody());
+		Logger.log("StatusCode : " + response.getStatusCode());
+		Logger.log(response.getBody());
 		NCBISearchResultsDTO searchResultsDTO = new NCBISearchResultsDTO(searchDTO);
 		return searchResultsDTO;
 	}
 
 	public List<Integer> esearch(NCBISearchDTO searchDTO) {
-		System.out.println("NCBIServiceHelper::esearch::START");
-		log("Request Received : " + searchDTO);
+		Logger.log("NCBIServiceHelper::esearch::START");
+		Logger.log("Request Received : " + searchDTO);
 		String searchUrl = urlBuilder.searchURL(searchDTO);
-		log("URL : " + searchUrl);
+		Logger.log("URL : " + searchUrl);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(searchUrl, String.class);
-		log("StatusCode : " + response.getStatusCode());
-		log(response.getBody());
+		Logger.log("StatusCode : " + response.getStatusCode());
+		Logger.log(response.getBody());
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(ESearchResult.class);
 			XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
@@ -73,7 +74,7 @@ public class NCBIServiceHelper {
 					.createXMLStreamReader(new StreamSource(new ByteArrayInputStream(response.getBody().getBytes())));
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			ESearchResult eSearchResult = (ESearchResult) unmarshaller.unmarshal(xmlStreamReader);
-			log("eSearchResult :: " + eSearchResult);
+			Logger.log("eSearchResult :: " + eSearchResult);
 			List<Object> eSearchResultObjects = eSearchResult
 					.getCountOrRetMaxOrRetStartOrQueryKeyOrWebEnvOrIdListOrTranslationSetOrTranslationStackOrQueryTranslationOrERROR();
 			/**
@@ -91,14 +92,15 @@ public class NCBIServiceHelper {
 				if (o instanceof IdList && totalCount > 0) {
 					IdList idList = (IdList) o;
 					for (Id id : idList.getId()) {
-						if (ids.size() >= MAX_ID)
-							break;
+						/*
+						 * if (ids.size() >= MAX_ID) break;
+						 */
 						ids.add(new Integer(id.getvalue()));
 					}
 				}
 			}
-			log("ids : " + ids);
-			System.out.println("NCBIServiceHelper::esearch::END");
+			Logger.log("ids : " + ids);
+			Logger.log("NCBIServiceHelper::esearch::END");
 			return ids;
 		} catch (JAXBException e) {
 			e.printStackTrace();
@@ -110,21 +112,21 @@ public class NCBIServiceHelper {
 	}
 
 	public NCBISearchResultsDTO efetch(List<Integer> uIds, NCBISearchResultsDTO searchResultsDTO) {
-		System.out.println("NCBIServiceHelper::efetch::START");
-		log("Request a list : " + uIds);
+		Logger.log("NCBIServiceHelper::efetch::START");
+		Logger.log("Request a list : " + uIds);
 		// String fetchUrl = urlBuilder.fetchURL(searchResultDTO.getDb(),
 		// convertToCommaSeperatedString(uIds));
 
 		String fetchUrl = urlBuilder.fetchURL(searchResultsDTO.getSearchDTO().getDb(),
 				uIds.stream().map(number -> String.valueOf(number)).collect(Collectors.joining(",")));
 
-		log("URL : " + fetchUrl);
+		Logger.log("URL : " + fetchUrl);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(fetchUrl, String.class);
-		log("StatusCode : " + response.getStatusCode());
-		log("Headers : " + response.getHeaders());
-		// log("Body : " + response.getBody());
-		// System.out.println("Body : " + response.getBody());
+		Logger.log("StatusCode : " + response.getStatusCode());
+		Logger.log("Headers : " + response.getHeaders());
+		// Logger.log("Body : " + response.getBody());
+		// Logger.log("Body : " + response.getBody());
 		ESearchResponseParser parser = eSearchResponseParserFactory
 				.getESearchResponseParser(searchResultsDTO.getSearchDTO().getDb());
 		try {
@@ -132,9 +134,9 @@ public class NCBIServiceHelper {
 			if (results.size() > 0)
 				searchResultsDTO.getResults().addAll(results);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			searchResultsDTO.setStatus("Error parsing response!");
 		}
-		System.out.println("NCBIServiceHelper::efetch::END");
+		Logger.log("NCBIServiceHelper::efetch::END");
 		return searchResultsDTO;
 	}
 
@@ -147,10 +149,6 @@ public class NCBIServiceHelper {
 				sb.append(",");
 		}
 		return sb.toString();
-	}
-
-	private void log(String msg) {
-		// System.out.println(msg);
 	}
 
 }

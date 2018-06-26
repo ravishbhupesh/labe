@@ -14,6 +14,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import com.labettor.app.ncbi.dto.NCBISearchResultDTO;
 import com.labettor.app.ncbi.service.response.parser.ESearchResponseParser;
+import com.labettor.app.ncbi.utils.Logger;
 import com.labettor.thirdparty.pmc.Article;
 import com.labettor.thirdparty.pmc.PmcArticleset;
 
@@ -29,7 +30,7 @@ public class PMCESearchResponseParser implements ESearchResponseParser {
 					.createXMLStreamReader(new StreamSource(new ByteArrayInputStream(response)));
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			PmcArticleset pmcArticleSet = (PmcArticleset) unmarshaller.unmarshal(xmlStreamReader);
-			System.out.println("eSearchResult :: " + pmcArticleSet);
+			Logger.log("eSearchResult :: " + pmcArticleSet);
 			List<Article> articles = pmcArticleSet.getArticle();
 			/**
 			 * {@link Count } {@link RetMax } {@link RetStart } {@link QueryKey }
@@ -39,8 +40,8 @@ public class PMCESearchResponseParser implements ESearchResponseParser {
 			int totalCount = 0;
 			List<NCBISearchResultDTO> results = new ArrayList<>();
 			for (Article a : articles) {
-				System.out.println(a);
-				System.out.println("a.getArticleType() -> " + a.getArticleType());
+				Logger.log(a.toString());
+				Logger.log("a.getArticleType() -> " + a.getArticleType());
 			}
 			return results;
 		} catch (JAXBException e) {
