@@ -5,19 +5,60 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	<h1>Search Criteria</h1>
-	<p th:text="'Database - ' + ${search.searchDTO.db}" />
-  	<p th:text="'Host Cell/Cell Type - ' + ${search.searchDTO.hostCellOrCellType}" />
-	<p th:text="'Experiment - ' + ${search.searchDTO.experiment}" />
-	<p th:text="'Free Full Text - ' + ${search.searchDTO.freeFullText}" />
-	<p th:text="'Date From - ' + ${search.searchDTO.dateFrom}" />
+	<table border="1">
+		<tr>
+			<th colspan="2">
+				Search Criteria
+			</th>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Database'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.db}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Host Cell or Cell Type'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.hostCellOrCellType}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Experiment'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.experiment}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Free Full Text'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.freeFullText}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Date From'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.dateFrom}" />
+			</td>
+		</tr>
+	</table>
     <h1>Results</h1>
-    <p th:text="'Status - ' + ${search.status}" />
+    <b th:text="'Status - ' + ${search.status}" />
     <table border="1" >
       <tr>
-        <th>Brand Name</th>
+        <th>Brand Name/Article Title</th>
         <th>Catalogue Number</th>
-        <th>Author</th>
+        <th>Author(s)</th>
         <!-- 
         <th>Product Link</th>
         <th>Publication Link</th>
@@ -34,7 +75,11 @@
         <td th:text="${result.publicationLink}" />
          -->
         <td th:text="${result.protocol}" />
-        <td th:text="${result.additionalInformation}" />
+        <td>
+        	<div th:each="entry : ${result.additionalInformations}">
+        		<span th:text="${entry.key}" /> : <span th:text="${entry.value}" />
+        	</div>
+        </td>
       </tr>
     </table>
     <div align="center">

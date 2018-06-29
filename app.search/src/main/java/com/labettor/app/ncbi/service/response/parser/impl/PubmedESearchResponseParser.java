@@ -59,7 +59,8 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 					 */
 
 					Journal journal = article.getJournal();
-					dto.setBrandName(journal.getTitle());
+					// dto.setBrandName(journal.getTitle());
+					dto.setBrandName(article.getArticleTitle().getvalue());
 					Logger.log("<<<< Brand Name(Journal) : " + journal.getTitle() + ">>>>");
 					/**
 					 * Catalogue Number
@@ -107,20 +108,20 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 					 * Additional information
 					 */
 					Abstract articleAbstract = article.getAbstract();
-					StringBuilder addInfo = new StringBuilder();
 					Logger.log("<!----- Additional information(abstract) START -----!>");
 					for (AbstractText abstractText : articleAbstract.getAbstractText()) {
 						// Logger.log("->" + abstractText.getLabel() + " - " + abstractText.getvalue());
-						System.out.println("->" + abstractText.getLabel() + " - " + abstractText.getvalue());
+						// System.out.println("->" + abstractText.getLabel() + " - " +
+						// abstractText.getvalue());
+						dto.addToAdditionalInformations(
+								abstractText.getLabel() == null ? "DEFAULT" : abstractText.getLabel(),
+								abstractText.getvalue());
 						if (abstractText.getLabel() != null && (abstractText.getLabel().contains("METHODS")
 								|| abstractText.getLabel().contains("Methods")
+								|| abstractText.getLabel().contains("methods")
 								|| abstractText.getLabel().contains("MATERIALS AND METHODS")))
 							dto.setProtocol(abstractText.getvalue());
-						addInfo.append(abstractText.getLabel() + " - " + abstractText.getvalue());
-						addInfo.append("||||");
-						addInfo.append("\n");
 					}
-					dto.setAdditionalInformation(addInfo.toString());
 					Logger.log("<!----- Additional information(abstract) END -----!>");
 					Logger.log("<!-------------------- ARTICLE INFO END   --------------------!>");
 

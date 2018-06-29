@@ -80,7 +80,7 @@ public class NCBISearchResultsDTO {
 			sb.append("\n");
 			sb.append("Protocol : " + dto.getProtocol());
 			sb.append("\n");
-			sb.append("Additional Information : " + dto.getAdditionalInformation());
+			sb.append("Additional Information : " + dto.getAdditionalInformations());
 			sb.append("<----END---->");
 		}
 		return sb.toString();

@@ -92,10 +92,9 @@ public class NCBIServiceHelper {
 				if (o instanceof IdList && totalCount > 0) {
 					IdList idList = (IdList) o;
 					for (Id id : idList.getId()) {
-						/*
-						 * if (ids.size() >= MAX_ID) break;
-						 */
 						ids.add(new Integer(id.getvalue()));
+						if (ids.size() >= MAX_ID)
+							break;
 					}
 				}
 			}
@@ -126,7 +125,7 @@ public class NCBIServiceHelper {
 		Logger.log("StatusCode : " + response.getStatusCode());
 		Logger.log("Headers : " + response.getHeaders());
 		// Logger.log("Body : " + response.getBody());
-		// Logger.log("Body : " + response.getBody());
+		System.out.println("Body : " + response.getBody());
 		ESearchResponseParser parser = eSearchResponseParserFactory
 				.getESearchResponseParser(searchResultsDTO.getSearchDTO().getDb());
 		try {

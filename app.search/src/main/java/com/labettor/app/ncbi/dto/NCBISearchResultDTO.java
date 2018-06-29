@@ -1,5 +1,8 @@
 package com.labettor.app.ncbi.dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class NCBISearchResultDTO {
 
 	public NCBISearchResultDTO() {
@@ -11,7 +14,7 @@ public class NCBISearchResultDTO {
 	private String productLink;
 	private String publicationLink;
 	private String protocol;
-	private String additionalInformation;
+	private Map<String, String> additionalInformations = new HashMap<>();
 
 	/**
 	 * status = 0 : Response Received <br/>
@@ -67,12 +70,12 @@ public class NCBISearchResultDTO {
 		this.protocol = protocol;
 	}
 
-	public String getAdditionalInformation() {
-		return additionalInformation;
+	public Map<String, String> getAdditionalInformations() {
+		return additionalInformations;
 	}
 
-	public void setAdditionalInformation(String additionalInformation) {
-		this.additionalInformation = additionalInformation;
+	public void addToAdditionalInformations(String key, String value) {
+		this.additionalInformations.put(key, value);
 	}
 
 	public int getStatus() {
@@ -97,7 +100,7 @@ public class NCBISearchResultDTO {
 		sb.append("\n");
 		sb.append("Protocol : " + this.getProtocol());
 		sb.append("\n");
-		sb.append("Additional Information : " + this.getAdditionalInformation());
+		sb.append("Additional Information : " + this.getAdditionalInformations());
 		return sb.toString();
 	}
 }
