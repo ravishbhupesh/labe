@@ -19,11 +19,13 @@ import javax.xml.transform.stream.StreamSource;
 import com.labettor.app.ncbi.dto.NCBISearchResultDTO;
 import com.labettor.app.ncbi.service.response.parser.ESearchResponseParser;
 import com.labettor.app.ncbi.utils.Logger;
+import com.labettor.thirdparty.oai.Address;
 import com.labettor.thirdparty.oai.Article;
 import com.labettor.thirdparty.oai.ArticleTitle;
 import com.labettor.thirdparty.oai.Body;
 import com.labettor.thirdparty.oai.Contrib;
 import com.labettor.thirdparty.oai.ContribGroup;
+import com.labettor.thirdparty.oai.Email;
 import com.labettor.thirdparty.oai.Front;
 import com.labettor.thirdparty.oai.GetRecordType;
 import com.labettor.thirdparty.oai.GivenNames;
@@ -89,11 +91,12 @@ public class OAIPMHResponseParser implements ESearchResponseParser {
 							if (o1 instanceof Contrib) {
 								Contrib contrib = (Contrib) o1;
 								if ("author".equals(contrib.getContribType())) {
+									String lastName = null;
+									String firstName = null;
+									String email = null;
 									for (Object o2 : contrib.getContribModel()) {
 										if (o2 instanceof Name) {
 											Name name = (Name) o2;
-											String lastName = null;
-											String firstName = null;
 											for (Object o4 : name.getContent()) {
 												if (o4 instanceof Surname) {
 													Surname surname = (Surname) o4;
@@ -109,15 +112,31 @@ public class OAIPMHResponseParser implements ESearchResponseParser {
 													firstName = namef.toString();
 												}
 											}
-											authors.add(firstName + " " + lastName);
+										}
+										if (o2 instanceof Address) {
+											Address address = (Address) o2;
+											for (Object o3 : address.getAddressModel()) {
+												if (o3 instanceof Email) {
+													Email email2 = (Email) o3;
+													StringBuilder emailsb = new StringBuilder();
+													for (Object o4 : email2.getContent())
+														emailsb.append(o4);
+													email = emailsb.toString();
+													emailsb = null;
+												}
+											}
 										}
 									}
+									if (email == null)
+										authors.add(firstName + " " + lastName);
+									else
+										authors.add(firstName + " " + lastName + "{" + email + "}");
 								}
 							}
 						}
 					}
 					Logger.log("authors:" + authors);
-					dto.setAuthor(authors.stream().collect(Collectors.joining("\n")));
+					dto.setAuthor(authors.stream().collect(Collectors.joining(",")));
 				}
 
 				Body body = article.getBody();
