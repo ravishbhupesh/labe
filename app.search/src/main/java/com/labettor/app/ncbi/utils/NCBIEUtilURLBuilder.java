@@ -51,6 +51,9 @@ public final class NCBIEUtilURLBuilder {
 		if (searchDTO.isFreeFullText()) {
 			searchInfo.append("+");
 			searchInfo.append("AND+free+fulltext%5filter%5");
+		} else {
+			searchInfo.append("+");
+			searchInfo.append("open+access%5Bfilter%5D");
 		}
 		searchInfo.append("&");
 		searchInfo.append("reldate=3650&datetype=edat");
@@ -76,6 +79,19 @@ public final class NCBIEUtilURLBuilder {
 		sb.append("id=" + idInfo);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
 		sb.append(NCBIEUtilitiesConstants.URL_PARAM_RTRN_MODE);
+		Logger.log("NCBIEUtilURLBuilder::fetchURL::END");
+		return sb.toString();
+	}
+
+	public String getRecordsURL(int id) {
+		Logger.log("NCBIEUtilURLBuilder::fetchURL::START");
+		StringBuilder sb = new StringBuilder(NCBIEUtilitiesConstants.BASE_URL_OAI);
+		sb.append("?verb=GetRecord");
+		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
+		sb.append("identifier=oai:pubmedcentral.nih.gov:");
+		sb.append(id);
+		sb.append(NCBIEUtilitiesConstants.URL_PARAM_SEP);
+		sb.append("metadataPrefix=pmc");
 		Logger.log("NCBIEUtilURLBuilder::fetchURL::END");
 		return sb.toString();
 	}

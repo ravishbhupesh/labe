@@ -1,0 +1,16 @@
+<jxb:bindings version="2.0"
+      xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+
+    <!-- <jxb:bindings schemaLocation="http://www.w3.org/1999/xlink.xsd" node="/xs:schema"> -->
+    <jxb:bindings schemaLocation="../oai/JATS-archivearticle1-elements.xsd" node="/xs:schema">
+
+        <jxb:bindings node="//xs:group[@name='sec-opt-title-model']">
+            <jxb:bindings node=".//xs:element[@ref='title']">
+                <jxb:property name="title1"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        
+    </jxb:bindings>          
+
+</jxb:bindings>

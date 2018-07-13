@@ -27,6 +27,9 @@ public class NCBIServiceImpl implements NCBIService {
 	@Override
 	public NCBISearchResultsDTO search(NCBISearchDTO searchDTO) {
 		Logger.log("NCBIServiceImpl::search::START");
+		if ("OAI".equals(searchDTO.getDb())) {
+			return searchOAI(searchDTO);
+		}
 		NCBISearchResultsDTO searchResultsDTO = new NCBISearchResultsDTO(searchDTO);
 		List<Integer> uIds = HELPER.esearch(searchDTO);
 		if (null != uIds && uIds.size() == 0) {
@@ -35,6 +38,19 @@ public class NCBIServiceImpl implements NCBIService {
 		}
 		searchResultsDTO = HELPER.efetch(uIds, searchResultsDTO);
 		Logger.log("NCBIServiceImpl::search::END");
+		return searchResultsDTO;
+	}
+
+	protected NCBISearchResultsDTO searchOAI(NCBISearchDTO searchDTO) {
+		Logger.log("NCBIServiceImpl::searchOAI::START");
+		NCBISearchResultsDTO searchResultsDTO = new NCBISearchResultsDTO(searchDTO);
+		List<Integer> uIds = HELPER.esearchoai(searchDTO);
+		if (null != uIds && uIds.size() == 0) {
+			searchResultsDTO.setStatus("No Results Found!");
+			return searchResultsDTO;
+		}
+		searchResultsDTO = HELPER.getRecords(uIds, searchResultsDTO);
+		Logger.log("NCBIServiceImpl::searchOAI::END");
 		return searchResultsDTO;
 	}
 

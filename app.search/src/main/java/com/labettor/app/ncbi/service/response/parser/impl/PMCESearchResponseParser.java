@@ -37,7 +37,6 @@ public class PMCESearchResponseParser implements ESearchResponseParser {
 			 * {@link WebEnv } {@link IdList } {@link TranslationSet }
 			 * {@link TranslationStack } {@link QueryTranslation } {@link ERROR }
 			 */
-			int totalCount = 0;
 			List<NCBISearchResultDTO> results = new ArrayList<>();
 			for (Article a : articles) {
 				Logger.log(a.toString());

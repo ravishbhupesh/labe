@@ -3,9 +3,14 @@ package com.labettor.app.ncbi.constants;
 public interface NCBIEUtilitiesConstants {
 
 	/**
-	 * BASE uRL for ALL NCBI EUtilities
+	 * BASE URL for ALL NCBI EUtilities
 	 */
 	String BASE_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
+
+	/**
+	 * BASE URL for OAT-PMH Service
+	 */
+	String BASE_URL_OAI = "https://www.ncbi.nlm.nih.gov/pmc/oai/oai.cgi";
 
 	/**
 	 * EInfo (database statistics)

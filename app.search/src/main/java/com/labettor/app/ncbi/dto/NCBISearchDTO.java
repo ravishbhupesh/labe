@@ -1,6 +1,6 @@
 package com.labettor.app.ncbi.dto;
 
-public class NCBISearchDTO {
+public class NCBISearchDTO implements Cloneable {
 
 	private String db;
 	private String hostCellOrCellType;
@@ -18,6 +18,10 @@ public class NCBISearchDTO {
 		this.experiment = experiment;
 		this.freeFullText = freeFullText;
 		this.dateFrom = dateFrom;
+	}
+
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	public String getDb() {

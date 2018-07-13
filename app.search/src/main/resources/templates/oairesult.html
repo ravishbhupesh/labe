@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th colspan="2">
+				Search Criteria
+			</th>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Database'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.db}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Host Cell or Cell Type'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.hostCellOrCellType}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Experiment'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.experiment}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Free Full Text'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.freeFullText}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p th:text="'Date From'" />
+			</td>
+			<td>
+				<p th:text="${search.searchDTO.dateFrom}" />
+			</td>
+		</tr>
+	</table>
+    <h1>Results</h1>
+    <b th:text="'Status - ' + ${search.status}" />
+    <table border="1" >
+      <tr>
+        <th>Brand Name/Article Title</th>
+        <th>Catalogue Number</th>
+        <th>Author(s)</th>
+        <!-- 
+        <th>Product Link</th>
+        <th>Publication Link</th>
+         -->
+        <th>Protocol</th>
+        <th>Additional Information(Materials and Methods)</th>
+      </tr>
+      <tr th:each="result : ${search.results}">
+        <td th:text="${result.brandName}" />
+        <td th:text="${result.catalogueNumber}" />
+        <td th:text="${result.author}" />
+        <!-- 
+        <td th:text="${result.productLink}" />
+        <td th:text="${result.publicationLink}" />
+         -->
+        <td th:text="${result.protocol}" />
+        <td>
+        	<div th:each="entry : ${result.additionalInformations}">
+        		<b th:text="${entry.key}" /> : <span th:text="${entry.value}" />
+        	</div>
+        </td>
+      </tr>
+    </table>
+    <div align="center">
+    	<a href="/labbetor/search">Home</a>
+    </div>
+</body>
+</html>

@@ -57,11 +57,26 @@ public class NCBIServiceHelper {
 		return searchResultsDTO;
 	}
 
+	public List<Integer> esearchoai(NCBISearchDTO searchDTO) {
+		Logger.log("NCBIServiceHelper::esearchoai::START");
+		NCBISearchDTO searchDTO1 = null;
+		try {
+			searchDTO1 = (NCBISearchDTO) searchDTO.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+		searchDTO1.setDb("pmc");
+		Logger.log("NCBIServiceHelper::esearchoai::END");
+		return esearch(searchDTO1);
+	}
+
 	public List<Integer> esearch(NCBISearchDTO searchDTO) {
 		Logger.log("NCBIServiceHelper::esearch::START");
 		Logger.log("Request Received : " + searchDTO);
 		String searchUrl = urlBuilder.searchURL(searchDTO);
 		Logger.log("URL : " + searchUrl);
+		System.out.println("URL : " + searchUrl);
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(searchUrl, String.class);
 		Logger.log("StatusCode : " + response.getStatusCode());
@@ -93,7 +108,8 @@ public class NCBIServiceHelper {
 					IdList idList = (IdList) o;
 					for (Id id : idList.getId()) {
 						ids.add(new Integer(id.getvalue()));
-						if (ids.size() >= MAX_ID)
+						// if (ids.size() >= MAX_ID)
+						if (ids.size() >= 1)
 							break;
 					}
 				}
@@ -136,6 +152,36 @@ public class NCBIServiceHelper {
 			searchResultsDTO.setStatus("Error parsing response!");
 		}
 		Logger.log("NCBIServiceHelper::efetch::END");
+		return searchResultsDTO;
+	}
+
+	public NCBISearchResultsDTO getRecords(List<Integer> uIds, NCBISearchResultsDTO searchResultsDTO) {
+		Logger.log("NCBIServiceHelper::getRecords::START");
+		Logger.log("Request a list : " + uIds);
+		// String fetchUrl = urlBuilder.fetchURL(searchResultDTO.getDb(),
+		// convertToCommaSeperatedString(uIds));
+		ESearchResponseParser parser = eSearchResponseParserFactory
+				.getESearchResponseParser(searchResultsDTO.getSearchDTO().getDb());
+		for (Integer uId : uIds) {
+			System.out.println("uId:" + uId);
+			String url = urlBuilder.getRecordsURL(uId);
+			Logger.log("URL : " + url);
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+			Logger.log("StatusCode : " + response.getStatusCode());
+			Logger.log("Headers : " + response.getHeaders());
+			// Logger.log("Body : " + response.getBody());
+			System.out.println("Body : " + response.getBody());
+			try {
+				List<NCBISearchResultDTO> results = parser.parser(response.getBody().getBytes("UTF-8"));
+				if (results.size() > 0)
+					searchResultsDTO.getResults().addAll(results);
+			} catch (UnsupportedEncodingException e) {
+				searchResultsDTO.setStatus("Error parsing response!");
+			}
+		}
+
+		Logger.log("NCBIServiceHelper::getRecords::END");
 		return searchResultsDTO;
 	}
 

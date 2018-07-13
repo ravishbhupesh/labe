@@ -41,9 +41,9 @@
 			<version>2.3</version>
 		</dependency>
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 	</dependencies>
 
 	<properties>
@@ -103,6 +103,27 @@
 							<sources>
 								<source>src/main/dtd/pmc</source>
 							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>xjc-oai</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+						<configuration>
+							<arguments>
+								<argument>-XautoNameResolution</argument>
+							</arguments>
+							<target>2.1</target>
+							<outputDirectory>src/main/generated</outputDirectory>
+							<clearOutputDir>false</clearOutputDir>
+							<packageName>com.labettor.thirdparty.oai</packageName>
+							<sources>
+								<source>src/main/xsd/oai</source>
+							</sources>
+							<xjbSources>
+								<xjbSource>src/main/xsd/oaibnd</xjbSource>
+							</xjbSources>
 						</configuration>
 					</execution>
 				</executions>

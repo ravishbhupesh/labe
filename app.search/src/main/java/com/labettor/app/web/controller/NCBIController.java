@@ -36,7 +36,32 @@ public class NCBIController {
 		Logger.log("NCBIController::searchSubmit::START");
 		NCBISearchResultsDTO searchResultsDTO = ncbiService.search(search);
 		// log("==>>" + searchResultsDTO);
-		ModelAndView modelAndView = new ModelAndView("result");
+		ModelAndView modelAndView = null;
+		String db = searchResultsDTO.getSearchDTO().getDb();
+		if ("pubmed".equals(db))
+			modelAndView = new ModelAndView("result");
+		else if ("pmc".equals(db))
+			modelAndView = new ModelAndView("pmcresult");
+		else if ("OAI".equals(db))
+			modelAndView = new ModelAndView("oairesult");
+
+		modelAndView.addObject("search", searchResultsDTO);
+		Logger.log("NCBIController::searchSubmit::END");
+		return modelAndView;
+	}
+
+	@PostMapping("/labbetor/search1")
+	public ModelAndView searchSubmit_backup(@ModelAttribute NCBISearchDTO search) {
+		Logger.log("NCBIController::searchSubmit::START");
+		NCBISearchResultsDTO searchResultsDTO = ncbiService.search(search);
+		// log("==>>" + searchResultsDTO);
+		ModelAndView modelAndView = null;
+		String db = searchResultsDTO.getSearchDTO().getDb();
+		if ("pubmed".equals(db))
+			modelAndView = new ModelAndView("result");
+		else if ("pmc".equals(db))
+			modelAndView = new ModelAndView("pmcresult");
+
 		modelAndView.addObject("search", searchResultsDTO);
 		Logger.log("NCBIController::searchSubmit::END");
 		return modelAndView;
