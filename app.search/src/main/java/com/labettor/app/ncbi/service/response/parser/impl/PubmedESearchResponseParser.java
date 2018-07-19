@@ -60,7 +60,7 @@ public class PubmedESearchResponseParser implements ESearchResponseParser {
 
 					Journal journal = article.getJournal();
 					// dto.setBrandName(journal.getTitle());
-					dto.setBrandName(article.getArticleTitle().getvalue());
+					dto.setArticleTitle(article.getArticleTitle().getvalue());
 					Logger.log("<<<< Brand Name(Journal) : " + journal.getTitle() + ">>>>");
 					/**
 					 * Catalogue Number

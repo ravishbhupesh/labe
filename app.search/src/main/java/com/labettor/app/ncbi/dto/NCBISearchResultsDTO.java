@@ -68,7 +68,7 @@ public class NCBISearchResultsDTO {
 		sb.append("\n");
 		for (NCBISearchResultDTO dto : results) {
 			sb.append("<----START---->");
-			sb.append("Brand Name : " + dto.getBrandName());
+			sb.append("Brand Name : " + dto.getArticleTitle());
 			sb.append("\n");
 			sb.append("Catalogue Number : " + dto.getCatalogueNumber());
 			sb.append("\n");

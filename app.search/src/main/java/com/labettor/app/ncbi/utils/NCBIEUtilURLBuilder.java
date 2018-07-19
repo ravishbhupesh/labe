@@ -56,7 +56,7 @@ public final class NCBIEUtilURLBuilder {
 			searchInfo.append("open+access%5Bfilter%5D");
 		}
 		searchInfo.append("&");
-		searchInfo.append("reldate=3650&datetype=edat");
+		searchInfo.append("reldate=1825&datetype=edat");
 		sb.append(searchInfo.toString());
 		Logger.log("NCBIEUtilURLBuilder::searchURL::END");
 		return sb.toString();

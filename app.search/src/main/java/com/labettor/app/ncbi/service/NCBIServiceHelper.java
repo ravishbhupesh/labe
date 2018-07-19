@@ -1,6 +1,9 @@
 package com.labettor.app.ncbi.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +43,7 @@ public class NCBIServiceHelper {
 		return INSTANCE;
 	}
 
-	private final int MAX_ID = 3;
+	private final int MAX_ID = 10;
 	private final NCBIEUtilURLBuilder urlBuilder = NCBIEUtilURLBuilder.getInstance();
 	private final ESearchResponseParserFactory eSearchResponseParserFactory = ESearchResponseParserFactory
 			.getInstance();
@@ -108,8 +111,7 @@ public class NCBIServiceHelper {
 					IdList idList = (IdList) o;
 					for (Id id : idList.getId()) {
 						ids.add(new Integer(id.getvalue()));
-						// if (ids.size() >= MAX_ID)
-						if (ids.size() >= 1)
+						if (ids.size() >= MAX_ID)
 							break;
 					}
 				}
@@ -171,8 +173,8 @@ public class NCBIServiceHelper {
 			Logger.log("StatusCode : " + response.getStatusCode());
 			Logger.log("Headers : " + response.getHeaders());
 			// Logger.log("Body : " + response.getBody());
-			System.out.println("Body : " + response.getBody());
 			try {
+				saveresponse(response.getBody().getBytes("UTF-8"), uId);
 				List<NCBISearchResultDTO> results = parser.parser(response.getBody().getBytes("UTF-8"));
 				if (results.size() > 0)
 					searchResultsDTO.getResults().addAll(results);
@@ -183,6 +185,21 @@ public class NCBIServiceHelper {
 
 		Logger.log("NCBIServiceHelper::getRecords::END");
 		return searchResultsDTO;
+	}
+
+	private void saveresponse(byte[] bytes, Integer uId) {
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream("C:\\!OPF\\oairesp" + uId + ".xml");
+			fos.write(bytes);
+			fos.flush();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			fos = null;
+		}
 	}
 
 	protected static String convertToCommaSeperatedString(List<Integer> uIds) {

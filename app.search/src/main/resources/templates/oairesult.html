@@ -56,25 +56,13 @@
     <b th:text="'Status - ' + ${search.status}" />
     <table border="1" >
       <tr>
-        <th>Brand Name/Article Title</th>
-        <th>Catalogue Number</th>
+        <th>Article Title</th>
         <th>Author(s)</th>
-        <!-- 
-        <th>Product Link</th>
-        <th>Publication Link</th>
-         -->
-        <th>Protocol</th>
         <th>Materials and Methods</th>
       </tr>
       <tr th:each="result : ${search.results}">
-        <td th:text="${result.brandName}" />
-        <td th:text="${result.catalogueNumber}" />
+        <td th:text="${result.articleTitle}" />
         <td th:text="${result.author}" />
-        <!-- 
-        <td th:text="${result.productLink}" />
-        <td th:text="${result.publicationLink}" />
-         -->
-        <td th:text="${result.protocol}" />
         <td>
         	<div th:each="entry : ${result.additionalInformations}">
         		<b th:text="${entry.key}" /> : <span th:text="${entry.value}" />

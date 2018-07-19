@@ -8,7 +8,7 @@ public class NCBISearchResultDTO {
 	public NCBISearchResultDTO() {
 	}
 
-	private String brandName;
+	private String articleTitle;
 	private String catalogueNumber;
 	private String author;
 	private String productLink;
@@ -22,12 +22,12 @@ public class NCBISearchResultDTO {
 	 */
 	private int status = 0;
 
-	public String getBrandName() {
-		return brandName;
+	public String getArticleTitle() {
+		return articleTitle;
 	}
 
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setArticleTitle(String articleTitle) {
+		this.articleTitle = articleTitle;
 	}
 
 	public String getCatalogueNumber() {
@@ -78,6 +78,10 @@ public class NCBISearchResultDTO {
 		this.additionalInformations.put(key, value);
 	}
 
+	public void addToAdditionalInformations(Map<String, String> info) {
+		this.additionalInformations.putAll(info);
+	}
+
 	public int getStatus() {
 		return status;
 	}
@@ -88,7 +92,7 @@ public class NCBISearchResultDTO {
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Brand Name : " + this.getBrandName());
+		sb.append("Brand Name : " + this.getArticleTitle());
 		sb.append("\n");
 		sb.append("Catalogue Number : " + this.getCatalogueNumber());
 		sb.append("\n");
