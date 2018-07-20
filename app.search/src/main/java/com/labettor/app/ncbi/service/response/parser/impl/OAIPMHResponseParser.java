@@ -28,11 +28,13 @@ import com.labettor.thirdparty.oai.Body;
 import com.labettor.thirdparty.oai.Contrib;
 import com.labettor.thirdparty.oai.ContribGroup;
 import com.labettor.thirdparty.oai.Email;
+import com.labettor.thirdparty.oai.ExtLink;
 import com.labettor.thirdparty.oai.Front;
 import com.labettor.thirdparty.oai.GetRecordType;
 import com.labettor.thirdparty.oai.GivenNames;
 import com.labettor.thirdparty.oai.Italic;
 import com.labettor.thirdparty.oai.MetadataType;
+import com.labettor.thirdparty.oai.Monospace;
 import com.labettor.thirdparty.oai.Name;
 import com.labettor.thirdparty.oai.OAIPMHtype;
 import com.labettor.thirdparty.oai.P;
@@ -43,6 +45,7 @@ import com.labettor.thirdparty.oai.Sub;
 import com.labettor.thirdparty.oai.Sup;
 import com.labettor.thirdparty.oai.Surname;
 import com.labettor.thirdparty.oai.Title;
+import com.labettor.thirdparty.oai.Uri;
 import com.labettor.thirdparty.oai.Xref;
 
 public class OAIPMHResponseParser implements ESearchResponseParser {
@@ -212,8 +215,7 @@ public class OAIPMHResponseParser implements ESearchResponseParser {
 											firstName = namef.toString();
 										}
 									}
-								}
-								if (o2 instanceof Address) {
+								} else if (o2 instanceof Address) {
 									Address address = (Address) o2;
 									for (Object o3 : address.getAddressModel()) {
 										if (o3 instanceof Email) {
@@ -225,6 +227,10 @@ public class OAIPMHResponseParser implements ESearchResponseParser {
 											emailsb = null;
 										}
 									}
+								} else if (o2 instanceof Email) {
+									Email email2 = (Email) o2;
+									email = email2.getContent().stream().map(e -> e.toString())
+											.collect(Collectors.joining(","));
 								}
 							}
 							if (email == null)
@@ -302,16 +308,26 @@ public class OAIPMHResponseParser implements ESearchResponseParser {
 				} else if ("fig".equals(xref.getRefType())) {
 					sb.append("FIGURE - ");
 				}
-				sb.append(xref.getContent().stream().map(a -> String.valueOf(a)).collect(Collectors.joining(",")));
-				Logger.log("--->>>"
-						+ xref.getContent().stream().map(a -> String.valueOf(a)).collect(Collectors.joining(",")));
+				sb.append(convertListToString(xref.getContent()));
 			} else if (o1 instanceof Sub) {
 				Sub sub = (Sub) o1;
-				sb.append(sub.getContent().stream().map(a -> String.valueOf(a)).collect(Collectors.joining(",")));
+				sb.append(convertListToString(sub.getContent()));
 				Logger.log("o1-" + o1);
 			} else if (o1 instanceof Sup) {
 				Sup sup = (Sup) o1;
-				sb.append(sup.getContent().stream().map(a -> String.valueOf(a)).collect(Collectors.joining(",")));
+				sb.append(convertListToString(sup.getContent()));
+				Logger.log("o1-" + o1);
+			} else if (o1 instanceof Monospace) {
+				Monospace monospace = (Monospace) o1;
+				sb.append(convertListToString(monospace.getContent()));
+				Logger.log("o1-" + o1);
+			} else if (o1 instanceof ExtLink) {
+				ExtLink extLink = (ExtLink) o1;
+				sb.append(convertListToString(extLink.getContent()));
+				Logger.log("o1-" + o1);
+			} else if (o1 instanceof Uri) {
+				Uri uri = (Uri) o1;
+				sb.append(convertListToString(uri.getContent()));
 				Logger.log("o1-" + o1);
 			} else {
 				sb.append(o1);
@@ -319,6 +335,10 @@ public class OAIPMHResponseParser implements ESearchResponseParser {
 			}
 		}
 		return sb.toString();
+	}
+
+	private String convertListToString(List<Object> list) {
+		return list.stream().map(a -> String.valueOf(a)).collect(Collectors.joining(","));
 	}
 
 	private String parseArticleTitle(ArticleTitle articleTitle) {
