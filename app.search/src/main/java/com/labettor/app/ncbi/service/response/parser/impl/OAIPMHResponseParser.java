@@ -315,7 +315,12 @@ public class OAIPMHResponseParser implements ESearchResponseParser {
 				Logger.log("o1-" + o1);
 			} else if (o1 instanceof Sup) {
 				Sup sup = (Sup) o1;
-				sb.append(convertListToString(sup.getContent()));
+				for (Object o2 : sup.getContent()) {
+					if (o2 instanceof Xref)
+						sb.append(convertListToString(((Xref) o2).getContent()));
+					else
+						sb.append(convertListToString(sup.getContent()));
+				}
 				Logger.log("o1-" + o1);
 			} else if (o1 instanceof Monospace) {
 				Monospace monospace = (Monospace) o1;

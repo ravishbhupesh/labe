@@ -9,7 +9,12 @@
 	<h1>Search</h1>
     <form action="#" th:action="@{/labbetor/search}" th:object="${search}" method="post">
   			Database
-  			<input type="text" th:field="*{db}" />
+  			<!-- <input type="text" th:field="*{db}" /> -->
+  			<select th:field="*{db}">
+  				<option selected="selected" value="OAI">OAI</option>
+  				<option value="pmc">pmc</option>
+  				<option value="pubmed">pubmed</option>
+  			</select>
   			Host Cell/Cell Type
   			<input type="text" th:field="*{hostCellOrCellType}" />
   			Experiment
